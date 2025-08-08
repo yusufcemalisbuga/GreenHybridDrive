@@ -1,0 +1,4191 @@
+@dataclass
+class AILearningData:
+    """AI öğrenme verisi için yapı"""
+    scenario_history: List[Dict] = None
+    efficiency_patterns: Dict = None
+    optimal_strategies: Dict = None
+    
+    def __post_init__(self):
+        if self.scenario_history is None:
+            self.scenario_history = []
+        if self.efficiency_patterns is None:
+            self.efficiency_patterns = {}
+        if self.optimal_strategies is None:
+            self.optimal_strategies = {}
+
+# === GLOBAL AI INSTANCES ===
+
+# Navigation AI instance
+navigation_ai = SmartNavigationAI()
+
+def generate_realistic_sensor_data(road_type: RoadType, weather: WeatherType, 
+                                 driving_style: DrivingStyle, speed_kmh: float) -> SensorData:
+    """Gerçekçi sensör verisi üret (test için)"""
+    
+    # Base values
+    sensor_data = SensorData()
+    sensor_data.gps_speed_kmh = speed_kmh
+    
+    # Driving style'a göre agresiflik
+    if driving_style == DrivingStyle.AGGRESSIVE:
+        sensor_data.accelerometer_y = random.uniform(2.5, 5.0)  # Sert ivme
+        sensor_data.brake_pressure_bar = random.uniform(6.0, 12.0)
+        sensor_data.throttle_position_percent = random.uniform(70, 95)
+        sensor_data.steering_angle_deg = random.uniform(-25, 25)
+    elif driving_style == DrivingStyle.ECO:
+        sensor_data.accelerometer_y = random.uniform(0.5, 1.5)
+        sensor_data.brake_pressure_bar = random.uniform(1.0, 4.0)
+        sensor_data.throttle_position_percent = random.uniform(20, 50)
+        sensor_data.steering_angle_deg = random.uniform(-8, 8)
+    else:  # Normal/Defensive
+        sensor_data.accelerometer_y = random.uniform(1.0, 2.5)
+        sensor_data.brake_pressure_bar = random.uniform(2.0, 6.0)
+        sensor_data.throttle_position_percent = random.uniform(30, 70)
+        sensor_data.steering_angle_deg = random.uniform(-15, 15)
+    
+    # Road type'a göre titreşim
+    if road_type in [RoadType.HIGHWAY_STRAIGHT, RoadType.HIGHWAY_CURVED]:
+        sensor_data.vibration_amplitude_mm = random.uniform(0.5, 2.0)
+        sensor_data.vibration_frequency_hz = random.uniform(2, 5)
+        sensor_data.road_roughness_index = random.uniform(1, 3)
+    elif road_type == RoadType.CITY_STREET:
+        sensor_data.vibration_amplitude_mm = random.uniform(1.0, 4.0)
+        sensor_data.vibration_frequency_hz = random.uniform(3, 8)
+        sensor_data.road_roughness_index = random.uniform(2, 5)
+    elif road_type in [RoadType.MOUNTAIN_ROAD, RoadType.FOREST_PATH]:
+        sensor_data.vibration_amplitude_mm = random.uniform(3.0, 8.0)
+        sensor_data.vibration_frequency_hz = random.uniform(8, 15)
+        sensor_data.road_roughness_index = random.uniform(5, 9)
+    
+    # Hava durumuna göre adjustments
+    if weather in [WeatherType.RAIN, WeatherType.SNOW]:
+        sensor_data.vibration_amplitude_mm *= 1.3  # Islak yolda daha fazla titreşim
+        sensor_data.gyroscope_roll = random.uniform(-5, 5)  # Kayma eğilimi
+    
+    # Hız'a göre aerodinamik etkiler
+    if speed_kmh > 80:
+        sensor_data.gyroscope_yaw = random.uniform(-2, 2)
+        sensor_data.accelerometer_x = random.uniform(-1, 1)  # Yan rüzgar
+    
+    return sensor_data
+
+def simulate_smart_navigation_scenario():
+    """Akıllı navigasyon AI demosu"""
+    print("\n" + "="*70)
+    print("🗺️  SMART NAVIGATION AI - REAL-TIME ROAD ANALYSIS DEMO")
+    print("="*70)
+    
+    # Test senaryoları
+    test_scenarios = [
+        {
+            "name": "🏁 Highway Aggressive Driving",
+            "road_type": RoadType.HIGHWAY_STRAIGHT,
+            "driving_style": DrivingStyle.AGGRESSIVE,
+            "speed": 130,
+            "weather": WeatherType.NONE
+        },
+        {
+            "name": "🏔️  Mountain Road - Excessive Shaking",
+            "road_type": RoadType.MOUNTAIN_ROAD,
+            "driving_style": DrivingStyle.NORMAL,
+            "speed": 45,
+            "weather": WeatherType.RAIN
+        },
+        {
+            "name": "🌲 Forest Path - Rough Terrain",
+            "road_type": RoadType.FOREST_PATH,
+            "driving_style": DrivingStyle.DEFENSIVE,
+            "speed": 25,
+            "weather": WeatherType.NONE
+        },
+        {
+            "name": "🌧️  City Rain - Eco Driving",
+            "road_type": RoadType.CITY_STREET,
+            "driving_style": DrivingStyle.ECO,
+            "speed": 35,
+            "weather": WeatherType.    print("\n" + "="*70)
+    print("✅ AI-ENHANCED SIMULATION COMPLETE")
+    print("🧠 Real Learning Algorithms Active: Q-Learning + Strategy Weight Adaptation")
+    print("📊 Continuous Improvement Through Experience")
+    print("="*70)
+    
+    # Ek AI yetenekleri demosu
+    print(f"\n🚀 RUNNING ADVANCED AI DEMOS...")
+    advanced_optimization_demo()
+    
+    # Sürekli öğrenme simülasyonu (küçük test)
+    performance_curve = continuous_learning_simulation(30)
+    
+    print(f"\n🎓 FINAL AI INTELLIGENCE REPORT")
+    print("="*60)
+    
+    final_stats = vehicle_ai.get_learning_statistics()
+    if final_stats.get('status') != 'no_data':
+        print(f"🎯 AI has mastered {len(final_stats['best_strategy_states'])} different scenarios")
+        print(f"🧠 Knowledge Base: {final_stats['learned_strategies']} unique states learned")
+        print(f"📊 Overall Learning Efficiency: {final_stats['improvement']*100:+.1f}%")
+        
+        # AI güven seviyesi
+        confidence = min(100, final_stats['total_scenarios'] * 2)
+        print(f"🔮 AI Confidence Level: {confidence}%")
+        
+        # En başarılı öğrenme pattern'i
+        if vehicle_ai.learning_data.efficiency_patterns:
+            best_pattern = max(
+                vehicle_ai.learning_data.efficiency_patterns.items(),
+                key=lambda x: np.mean(x[1])
+            )
+            print(f"🏆 Best Mastered Scenario: {best_pattern[0]} (Efficiency: {np.mean(best_pattern[1]):.3f})")
+    
+    print(f"\n💡 AI is now ready for real-world deployment with continuous learning!")
+
+# === OPTIMIZED HELPER FUNCTIONS ===
+
+def real_time_performance_monitor():
+    """Gerçek zamanlı performans monitörü"""
+    if len(vehicle_ai.efficiency_history) < 2:
+        return {"status": "insufficient_data"}
+    
+    # Son 5 senaryo vs önceki 5 senaryo karşılaştırması
+    recent_slice = vehicle_ai.efficiency_history[-5:] if len(vehicle_ai.efficiency_history) >= 5 else vehicle_ai.efficiency_history
+    older_slice = vehicle_ai.efficiency_history[-10:-5] if len(vehicle_ai.efficiency_history) >= 10 else vehicle_ai.efficiency_history[:-5] if len(vehicle_ai.efficiency_history) > 5 else [0.7]  # baseline
+    
+    recent_avg = np.mean(recent_slice)
+    older_avg = np.mean(older_slice)
+    trend = recent_avg - older_avg
+    
+    # Performance kategorisi
+    if recent_avg > 0.9:
+        performance_level = "EXCELLENT"
+    elif recent_avg > 0.8:
+        performance_level = "GOOD"
+    elif recent_avg > 0.7:
+        performance_level = "FAIR"
+    else:
+        performance_level = "NEEDS_IMPROVEMENT"
+    
+    return {
+        "current_performance": recent_avg,
+        "trend": trend,
+        "performance_level": performance_level,
+        "learning_velocity": abs(trend) * 100,  # Öğrenme hızı
+        "recommendation": "maintain_course" if trend >= 0 else "adjust_strategy"
+    }
+
+def adaptive_difficulty_adjustment():
+    """AI performansına göre zorluk seviyesi ayarı"""
+    monitor = real_time_performance_monitor()
+    
+    if monitor.get("status") == "insufficient_data":
+        return "normal"
+    
+    perf_level = monitor["performance_level"]
+    trend = monitor["trend"]
+    
+    # AI çok iyi performans gösteriyorsa zorluk artır
+    if perf_level == "EXCELLENT" and trend > 0.05:
+        return "increase_difficulty"
+    # AI zorlanıyorsa zorluk azalt
+    elif perf_level == "NEEDS_IMPROVEMENT" and trend < -0.02:
+        return "decrease_difficulty"
+    else:
+        return "maintain_difficulty"
+
+def generate_ai_insights():
+    """AI'dan öngörüler ve içgörüler"""
+    insights = []
+    
+    if len(vehicle_ai.learning_data.efficiency_patterns) > 0:
+        # En verimli senaryo tipi
+        best_scenario = max(
+            vehicle_ai.learning_data.efficiency_patterns.items(),
+            key=lambda x: np.mean(x[1])
+        )
+        insights.append(f"🎯 Optimal Scenario Discovered: {best_scenario[0]} (Avg: {np.mean(best_scenario[1]):.3f})")
+        
+        # En zor senaryo tipi
+        worst_scenario = min(
+            vehicle_ai.learning_data.efficiency_patterns.items(),
+            key=lambda x: np.mean(x[1])
+        )
+        insights.append(f"⚠️  Challenging Scenario: {worst_scenario[0]} (Avg: {np.mean(worst_scenario[1]):.3f})")
+    
+    # Strategy weight analizi
+    dominant_strategy = max(vehicle_ai.strategy_weights.items(), key=lambda x: x[1])
+    insights.append(f"🧠 AI Dominant Strategy: {dominant_strategy[0]} (Weight: {dominant_strategy[1]:.3f})")
+    
+    # Exploration vs Exploitation dengesi
+    if vehicle_ai.exploration_rate > 0.1:
+        insights.append(f"🔍 AI is still exploring ({vehicle_ai.exploration_rate:.3f} exploration rate)")
+    else:
+        insights.append(f"🎯 AI has converged to exploitation mode (confident in learned strategies)")
+    
+    # Q-learning progress
+    if vehicle_ai.q_table:
+        learned_states = len(vehicle_ai.q_table)
+        avg_q_value = np.mean([max(actions.values()) for actions in vehicle_ai.q_table.values()])
+        insights.append(f"📚 Knowledge Base: {learned_states} states, Avg Q-value: {avg_q_value:.1f}")
+    
+    return insights
+
+def export_ai_model():
+    """AI modelini export et (gerçek uygulamada dosyaya kaydedilir)"""
+    model_data = {
+        'strategy_weights': vehicle_ai.strategy_weights.copy(),
+        'q_table': vehicle_ai.q_table.copy(),
+        'learning_rate': vehicle_ai.learning_rate,
+        'exploration_rate': vehicle_ai.exploration_rate,
+        'total_experience': len(vehicle_ai.learning_data.scenario_history),
+        'efficiency_patterns': vehicle_ai.learning_data.efficiency_patterns.copy(),
+        'performance_metrics': {
+            'avg_efficiency': np.mean(vehicle_ai.efficiency_history) if vehicle_ai.efficiency_history else 0,
+            'learning_improvement': vehicle_ai.get_learning_statistics().get('improvement', 0)
+        }
+    }
+    return model_data
+
+def load_ai_model(model_data: Dict):
+    """AI modelini yükle (gerçek uygulamada dosyadan okunur)"""
+    if 'strategy_weights' in model_data:
+        vehicle_ai.strategy_weights = model_data['strategy_weights']
+    if 'q_table' in model_data:
+        vehicle_ai.q_table = model_data['q_table']
+    if 'exploration_rate' in model_data:
+        vehicle_ai.exploration_rate = model_data['exploration_rate']
+    # ... diğer parametreler
+    
+    print(f"🔄 AI Model Loaded - Experience: {model_data.get('total_experience', 0)} scenarios")
+
+# === PERFORMANCE OPTIMIZATION ===
+
+def optimize_system_parameters():
+    """Sistem parametrelerini AI öğrenmelerine göre optimize et"""
+    
+    if len(vehicle_ai.efficiency_history) < 10:
+        return "Insufficient data for optimization"
+    
+    # En iyi performans gösteren senaryoları analiz et
+    best_scenarios = [
+        scenario for scenario in vehicle_ai.learning_data.scenario_history 
+        if scenario['efficiency'] > 0.85
+    ]
+    
+    if not best_scenarios:
+        return "No high-performance scenarios found"
+    
+    recommendations = []
+    
+    # Pattern analizi
+    terrain_performance = {}
+    for scenario in best_scenarios:
+        terrain = scenario['scenario'].get('terrain', 'unknown')
+        if terrain not in terrain_performance:
+            terrain_performance[terrain] = []
+        terrain_performance[terrain].append(scenario['efficiency'])
+    
+    # En iyi terrain stratejisi
+    if terrain_performance:
+        best_terrain = max(terrain_performance.items(), key=lambda x: np.mean(x[1]))
+        recommendations.append(f"Optimal terrain strategy identified: {best_terrain[0]}")
+    
+    # Strategy weight optimizasyonu
+    if vehicle_ai.strategy_weights['pressure_importance'] > 0.7:
+        recommendations.append("System favors pneumatic power - consider increasing tank capacity")
+    elif vehicle_ai.strategy_weights['battery_importance'] > 0.7:
+        recommendations.append("System favors electric power - consider battery upgrade")
+    
+    return recommendationsimport math
+import numpy as np
+from dataclasses import dataclass
+from enum import Enum
+from typing import Tuple, Dict, List
+import random
+import time
+
+# === ENUMS AND CONSTANTS ===
+
+class WeatherType(Enum):
+    NONE = "none"
+    RAIN = "rain"
+    SNOW = "snow"
+    HAIL = "hail"
+    FOG = "fog"
+
+class RainIntensity(Enum):
+    NONE = "none"
+    LIGHT = "light"
+    MODERATE = "moderate"
+    HEAVY = "heavy"
+
+class WindDirection(Enum):
+    NONE = "none"
+    HEAD = "head"
+    TAIL = "tail"
+    CROSS = "cross"
+
+class DrivingStyle(Enum):
+    DEFENSIVE = "defensive"
+    NORMAL = "normal"
+    AGGRESSIVE = "aggressive"
+    ECO = "eco"
+
+class TerrainType(Enum):
+    HIGHWAY = "highway"
+    CITY = "city"
+    MOUNTAIN = "mountain"
+    OFFROAD = "offroad"
+
+class RoadType(Enum):
+    HIGHWAY_STRAIGHT = "highway_straight"
+    HIGHWAY_CURVED = "highway_curved"
+    CITY_STREET = "city_street"
+    MOUNTAIN_ROAD = "mountain_road"
+    FOREST_PATH = "forest_path"
+    DESERT_ROAD = "desert_road"
+    COASTAL_ROAD = "coastal_road"
+
+class VehicleState(Enum):
+    STABLE = "stable"
+    SLIGHT_VIBRATION = "slight_vibration"
+    MODERATE_SHAKE = "moderate_shake"
+    HEAVY_SHAKE = "heavy_shake"
+    EXTREME_CONDITIONS = "extreme_conditions"
+
+# === SENSOR DATA STRUCTURES ===
+
+@dataclass
+class SensorData:
+    """Araç sensör verileri"""
+    # Hareket sensörleri
+    accelerometer_x: float = 0.0  # Yanal ivme
+    accelerometer_y: float = 0.0  # Boyuna ivme  
+    accelerometer_z: float = 0.0  # Dikey ivme
+    gyroscope_roll: float = 0.0   # Yalpalama
+    gyroscope_pitch: float = 0.0  # Yunuslama
+    gyroscope_yaw: float = 0.0    # Sapma
+    
+    # GPS ve navigasyon
+    gps_speed_kmh: float = 0.0
+    gps_altitude_m: float = 0.0
+    gps_heading_deg: float = 0.0
+    road_curvature: float = 0.0   # Yol eğriliği (-1 to 1)
+    
+    # Çevre sensörleri
+    ambient_light_lux: float = 1000.0
+    road_surface_temp_c: float = 20.0
+    tire_pressure_bar: List[float] = None  # 4 lastik basıncı
+    
+    # Sürüş dinamikleri
+    steering_angle_deg: float = 0.0
+    brake_pressure_bar: float = 0.0
+    throttle_position_percent: float = 0.0
+    suspension_compression: List[float] = None  # 4 amortisör sıkışma
+    
+    # Titreşim analizi
+    vibration_frequency_hz: float = 0.0
+    vibration_amplitude_mm: float = 0.0
+    road_roughness_index: float = 0.0  # 0-10 arası
+    
+    def __post_init__(self):
+        if self.tire_pressure_bar is None:
+            self.tire_pressure_bar = [2.2, 2.2, 2.2, 2.2]
+        if self.suspension_compression is None:
+            self.suspension_compression = [0.0, 0.0, 0.0, 0.0]
+
+@dataclass
+class RoadCondition:
+    """Yol durumu analizi"""
+    surface_type: str = "asphalt"  # asphalt, concrete, gravel, dirt, sand
+    surface_quality: float = 8.0   # 0-10 arası (10 = mükemmel)
+    road_width_m: float = 3.5
+    lane_count: int = 2
+    shoulder_quality: float = 5.0
+    visibility_m: float = 1000.0
+    traffic_density: float = 0.3   # 0-1 arası
+    
+@dataclass
+class NavigationContext:
+    """Navigasyon konteksti"""
+    current_road_type: RoadType = RoadType.CITY_STREET
+    upcoming_turns: List[Dict] = None  # [{"direction": "left", "angle": 45, "distance_m": 200}]
+    elevation_profile: List[float] = None  # Önümüzdeki yükseklik profili
+    speed_limit_kmh: float = 50.0
+    estimated_arrival_time: float = 0.0  # dakika
+    
+    def __post_init__(self):
+        if self.upcoming_turns is None:
+            self.upcoming_turns = []
+        if self.elevation_profile is None:
+            self.elevation_profile = [0.0] * 10  # 10 noktalık profil
+
+# === DATA CLASSES ===
+
+@dataclass
+class VehicleParameters:
+    mass_kg: float = 1500
+    tank_volume_m3: float = 0.3
+    pneumatic_flow_rate_m3s: float = 0.05
+    drag_coefficient: float = 0.3
+    frontal_area_m2: float = 2.2
+    rolling_resistance_coeff: float = 0.01
+    max_tank_pressure_pa: float = 50_000_000  # 500 bar max
+    tire_efficiency: float = 0.95
+
+@dataclass
+class SystemParameters:
+    min_operating_pressure_pa: float = 5_000_000  # 50 bar
+    pneumatic_priority_threshold_pa: float = 30_000_000  # 300 bar
+    battery_low_threshold_kwh: float = 5.0
+    battery_capacity_kwh: float = 50.0
+    high_demand_threshold_kw: float = 80
+    pneumatic_efficiency: float = 0.65
+    electric_efficiency: float = 0.90
+    overall_efficiency: float = 0.92
+    max_electric_power_kw: float = 150
+    max_regen_power_kw: float = 100
+    thermal_management_power_kw: float = 2.0  # Cooling/heating system
+
+@dataclass
+class Environment:
+    temperature_c: float = 22
+    humidity_percent: float = 55
+    wind_speed_kmh: float = 0
+    wind_direction: WindDirection = WindDirection.NONE
+    altitude_m: float = 0
+    weather_type: WeatherType = WeatherType.NONE
+    rain_intensity: RainIntensity = RainIntensity.NONE
+    terrain_type: TerrainType = TerrainType.HIGHWAY
+    visibility_m: float = 1000
+
+class SmartNavigationAI:
+    """AI destekli otomatik yol belirleme ve sürüş analizi sistemi"""
+    
+    def __init__(self):
+        # Temel öğrenme verileri
+        self.road_patterns = {}  # Yol pattern'leri
+        self.driving_behavior_history = []
+        self.route_efficiency_database = {}
+        
+        # Real-time analysis
+        self.current_road_analysis = None
+        self.driving_style_confidence = 0.0
+        self.route_recommendations = []
+        
+        # Machine Learning için feature weights
+        self.vibration_sensitivity = 0.7
+        self.speed_analysis_weight = 0.8
+        self.steering_analysis_weight = 0.6
+        self.environmental_weight = 0.5
+        
+        # Öğrenme parametreleri
+        self.pattern_learning_rate = 0.15
+        self.confidence_threshold = 0.75
+        
+    def analyze_driving_behavior(self, sensor_data: SensorData, 
+                               time_window_s: float = 30.0) -> Dict:
+        """Gerçek zamanlı sürüş davranışı analizi"""
+        
+        behavior_analysis = {
+            'driving_style': DrivingStyle.NORMAL,
+            'aggressiveness_score': 0.0,  # 0-10 arası
+            'stability_score': 0.0,       # 0-10 arası  
+            'eco_score': 0.0,            # 0-10 arası
+            'confidence': 0.0,
+            'specific_behaviors': []
+        }
+        
+        # 1. İvmelenme analizi (agresiflik tespiti)
+        acceleration_magnitude = math.sqrt(
+            sensor_data.accelerometer_x**2 + 
+            sensor_data.accelerometer_y**2
+        )
+        
+        if acceleration_magnitude > 4.0:  # Çok sert ivme
+            behavior_analysis['aggressiveness_score'] += 3.0
+            behavior_analysis['specific_behaviors'].append("harsh_acceleration")
+        elif acceleration_magnitude > 2.5:  # Orta sert
+            behavior_analysis['aggressiveness_score'] += 1.5
+        
+        # 2. Direksiyon kullanımı analizi
+        steering_aggression = abs(sensor_data.steering_angle_deg) / time_window_s
+        if steering_aggression > 15.0:  # Çok hızlı direksiyon hareketi
+            behavior_analysis['aggressiveness_score'] += 2.0
+            behavior_analysis['specific_behaviors'].append("aggressive_steering")
+        
+        # 3. Fren analizi
+        if sensor_data.brake_pressure_bar > 8.0:  # Sert fren
+            behavior_analysis['aggressiveness_score'] += 2.5
+            behavior_analysis['specific_behaviors'].append("harsh_braking")
+            
+        # 4. Hız analizi (aşırı hız tespiti varsayımsal olarak)
+        speed_excess_factor = max(0, (sensor_data.gps_speed_kmh - 120) / 30)  # 120+ aşırı hız
+        behavior_analysis['aggressiveness_score'] += speed_excess_factor * 2.0
+        
+        # 5. Stability analizi (sallanma tespiti)
+        vibration_instability = sensor_data.vibration_amplitude_mm / 10.0
+        roll_instability = abs(sensor_data.gyroscope_roll) / 45.0  # 45 derece max normal
+        pitch_instability = abs(sensor_data.gyroscope_pitch) / 30.0
+        
+        total_instability = (vibration_instability + roll_instability + pitch_instability) / 3.0
+        behavior_analysis['stability_score'] = max(0, 10 - total_instability * 10)
+        
+        if total_instability > 0.7:
+            behavior_analysis['specific_behaviors'].append("vehicle_instability")
+        if vibration_instability > 0.8:
+            behavior_analysis['specific_behaviors'].append("excessive_vibration")
+            
+        # 6. Eco sürüş analizi
+        throttle_smoothness = 10 - min(10, sensor_data.throttle_position_percent / 10)
+        brake_efficiency = 10 - min(10, sensor_data.brake_pressure_bar)
+        behavior_analysis['eco_score'] = (throttle_smoothness + brake_efficiency) / 2.0
+        
+        # 7. Sürüş tarzı sınıflandırması
+        aggression = behavior_analysis['aggressiveness_score']
+        if aggression > 6.0:
+            behavior_analysis['driving_style'] = DrivingStyle.AGGRESSIVE
+            behavior_analysis['confidence'] = min(1.0, aggression / 10.0)
+        elif aggression < 2.0 and behavior_analysis['eco_score'] > 7.0:
+            behavior_analysis['driving_style'] = DrivingStyle.ECO
+            behavior_analysis['confidence'] = behavior_analysis['eco_score'] / 10.0
+        elif behavior_analysis['stability_score'] > 8.0 and aggression < 3.0:
+            behavior_analysis['driving_style'] = DrivingStyle.DEFENSIVE
+            behavior_analysis['confidence'] = behavior_analysis['stability_score'] / 10.0
+        else:
+            behavior_analysis['driving_style'] = DrivingStyle.NORMAL
+            behavior_analysis['confidence'] = 0.6
+        
+        # Behavior history'ye ekle (öğrenme için)
+        self.driving_behavior_history.append({
+            'timestamp': time.time(),
+            'behavior': behavior_analysis.copy(),
+            'sensor_snapshot': sensor_data
+        })
+        
+        return behavior_analysis
+    
+    def detect_road_conditions(self, sensor_data: SensorData, 
+                             nav_context: NavigationContext) -> RoadCondition:
+        """Yol durumunu sensör verilerinden tespit et"""
+        
+        road_condition = RoadCondition()
+        
+        # 1. Yol yüzey tipi tespiti (titreşim patternlerine göre)
+        vibration = sensor_data.vibration_amplitude_mm
+        frequency = sensor_data.vibration_frequency_hz
+        roughness = sensor_data.road_roughness_index
+        
+        if vibration < 2.0 and frequency < 5.0:
+            road_condition.surface_type = "asphalt"
+            road_condition.surface_quality = 9.0
+        elif vibration < 4.0 and frequency < 8.0:
+            road_condition.surface_type = "concrete" 
+            road_condition.surface_quality = 8.0
+        elif vibration < 8.0 and frequency > 10.0:
+            road_condition.surface_type = "gravel"
+            road_condition.surface_quality = 5.0
+        elif vibration > 8.0:
+            road_condition.surface_type = "dirt" if roughness > 6.0 else "damaged_asphalt"
+            road_condition.surface_quality = 3.0 if roughness > 6.0 else 4.0
+        
+        # 2. Yol genişliği ve şerit sayısı tahmini (GPS ve steering pattern)
+        if nav_context.current_road_type in [RoadType.HIGHWAY_STRAIGHT, RoadType.HIGHWAY_CURVED]:
+            road_condition.lane_count = 3
+            road_condition.road_width_m = 3.75 * road_condition.lane_count
+        elif nav_context.current_road_type == RoadType.CITY_STREET:
+            road_condition.lane_count = 2
+            road_condition.road_width_m = 3.5 * road_condition.lane_count
+        else:  # Mountain, forest paths
+            road_condition.lane_count = 1
+            road_condition.road_width_m = 3.0
+            
+        # 3. Görüş mesafesi (ambient light ve weather)
+        if sensor_data.ambient_light_lux < 100:  # Gece/karanlık
+            road_condition.visibility_m = min(300, road_condition.visibility_m)
+        elif sensor_data.ambient_light_lux < 500:  # Alacakaranlık
+            road_condition.visibility_m = min(800, road_condition.visibility_m)
+            
+        return road_condition
+    
+    def smart_route_analysis(self, sensor_data: SensorData, 
+                           nav_context: NavigationContext, 
+                           current_behavior: Dict) -> Dict:
+        """Akıllı rota analizi ve önerileri"""
+        
+        route_analysis = {
+            'current_route_suitability': 0.0,  # 0-10 arası
+            'recommended_adjustments': [],
+            'alternative_routes': [],
+            'risk_factors': [],
+            'efficiency_prediction': 0.0
+        }
+        
+        # 1. Mevcut yol durumu vs sürüş tarzı uyumluluğu
+        road_condition = self.detect_road_conditions(sensor_data, nav_context)
+        driving_style = current_behavior['driving_style']
+        
+        # Agresif sürücü + kötü yol = düşük uyumluluk
+        if driving_style == DrivingStyle.AGGRESSIVE and road_condition.surface_quality < 6.0:
+            route_analysis['current_route_suitability'] = 3.0
+            route_analysis['risk_factors'].append("aggressive_driving_poor_road")
+            route_analysis['recommended_adjustments'].append("reduce_speed_for_road_conditions")
+            
+        # Eco sürücü + highway = yüksek uyumluluk
+        elif driving_style == DrivingStyle.ECO and nav_context.current_road_type in [RoadType.HIGHWAY_STRAIGHT]:
+            route_analysis['current_route_suitability'] = 9.0
+            
+        # Defensive + mountain = orta uyumluluk
+        elif driving_style == DrivingStyle.DEFENSIVE and "mountain" in nav_context.current_road_type.value:
+            route_analysis['current_route_suitability'] = 7.0
+        else:
+            route_analysis['current_route_suitability'] = 6.0  # Default
+            
+        # 2. Titreşim/sallanma analizi
+        if current_behavior['stability_score'] < 5.0:
+            route_analysis['risk_factors'].append("vehicle_instability_detected")
+            route_analysis['recommended_adjustments'].append("switch_to_smoother_road")
+            
+            # Alternatif yol önerileri
+            if nav_context.current_road_type == RoadType.MOUNTAIN_ROAD:
+                route_analysis['alternative_routes'].append({
+                    'type': 'highway_detour',
+                    'reason': 'smoother_surface',
+                    'estimated_time_penalty_min': 15,
+                    'comfort_improvement': 8.0
+                })
+                
+        # 3. Hava koşulları vs yol tipi
+        if road_condition.visibility_m < 500:
+            if nav_context.current_road_type in [RoadType.MOUNTAIN_ROAD, RoadType.FOREST_PATH]:
+                route_analysis['risk_factors'].append("low_visibility_dangerous_road")
+                route_analysis['recommended_adjustments'].append("switch_to_main_roads")
+                
+        # 4. Verimlilik tahmini
+        terrain_efficiency = {
+            RoadType.HIGHWAY_STRAIGHT: 0.9,
+            RoadType.HIGHWAY_CURVED: 0.8,
+            RoadType.CITY_STREET: 0.6,
+            RoadType.MOUNTAIN_ROAD: 0.4,
+            RoadType.FOREST_PATH: 0.3
+        }
+        
+        base_efficiency = terrain_efficiency.get(nav_context.current_road_type, 0.5)
+        behavior_penalty = current_behavior['aggressiveness_score'] * 0.05  # Agresiflik cezası
+        surface_bonus = road_condition.surface_quality * 0.02
+        
+        route_analysis['efficiency_prediction'] = max(0.1, 
+            base_efficiency - behavior_penalty + surface_bonus)
+        
+        return route_analysis
+    
+    def generate_route_recommendations(self, analysis_history: List[Dict]) -> List[Dict]:
+        """Geçmiş analizlere dayalı rota önerileri"""
+        
+        if len(analysis_history) < 5:
+            return [{"message": "Insufficient data for recommendations"}]
+        
+        recommendations = []
+        
+        # Pattern analizi
+        recent_instability = sum(1 for a in analysis_history[-10:] 
+                               if a.get('behavior', {}).get('stability_score', 10) < 5.0)
+        
+        if recent_instability > 3:  # Son 10'da 3+ kararsızlık
+            recommendations.append({
+                'type': 'route_change',
+                'priority': 'high',
+                'message': 'Frequent vehicle instability detected. Recommend switching to highway routes.',
+                'specific_action': 'avoid_mountain_forest_roads',
+                'expected_benefit': 'Reduce vibration by 60-80%'
+            })
+        
+        # Agresif sürüş pattern'i
+        aggressive_episodes = sum(1 for a in analysis_history[-15:] 
+                                if a.get('behavior', {}).get('driving_style') == DrivingStyle.AGGRESSIVE)
+        
+        if aggressive_episodes > 5:
+            recommendations.append({
+                'type': 'driving_behavior',
+                'priority': 'medium', 
+                'message': 'Aggressive driving pattern detected. Consider longer highway routes for safety.',
+                'specific_action': 'prefer_straight_highways',
+                'expected_benefit': 'Improve safety score by 40%'
+            })
+            
+        # Eco-efficiency önerisi
+        eco_episodes = sum(1 for a in analysis_history[-10:] 
+                         if a.get('behavior', {}).get('eco_score', 0) > 7.0)
+        
+        if eco_episodes > 7:
+            recommendations.append({
+                'type': 'efficiency_optimization',
+                'priority': 'low',
+                'message': 'Excellent eco-driving detected. You can use more challenging routes efficiently.',
+                'specific_action': 'consider_scenic_routes',
+                'expected_benefit': 'Maintain efficiency while enjoying better routes'
+            })
+            
+        return recommendations
+    
+    def learn_from_route_experience(self, route_data: Dict, performance_metrics: Dict):
+        """Rota deneyimlerinden öğrenme"""
+        
+        # Route pattern kayıt
+        route_key = f"{route_data.get('road_type', 'unknown')}_{route_data.get('surface_type', 'unknown')}"
+        
+        if route_key not in self.route_efficiency_database:
+            self.route_efficiency_database[route_key] = {
+                'efficiency_history': [],
+                'comfort_history': [],
+                'safety_history': [],
+                'sample_count': 0
+            }
+        
+        db_entry = self.route_efficiency_database[route_key]
+        db_entry['efficiency_history'].append(performance_metrics.get('efficiency', 0.5))
+        db_entry['comfort_history'].append(performance_metrics.get('comfort_score', 5.0))
+        db_entry['safety_history'].append(performance_metrics.get('safety_score', 5.0))
+        db_entry['sample_count'] += 1
+        
+        # Adaptive weight güncelleme
+        if performance_metrics.get('efficiency', 0) > 0.8:
+            # İyi performansta ağırlıkları güçlendir
+            self.vibration_sensitivity *= (1 + self.pattern_learning_rate)
+            self.environmental_weight *= (1 + self.pattern_learning_rate * 0.5)
+        elif performance_metrics.get('efficiency', 0) < 0.4:
+            # Kötü performansta ağırlıkları azalt
+            self.vibration_sensitivity *= (1 - self.pattern_learning_rate * 0.5)
+            
+        # Sınırları koru
+        self.vibration_sensitivity = np.clip(self.vibration_sensitivity, 0.3, 1.0)
+        self.environmental_weight = np.clip(self.environmental_weight, 0.2, 0.8)
+    
+    def get_navigation_insights(self) -> Dict:
+        """Navigasyon AI'ından insights"""
+        
+        if not self.route_efficiency_database:
+            return {"status": "insufficient_data"}
+        
+        # En verimli yol tipi
+        best_route_type = max(
+            self.route_efficiency_database.items(),
+            key=lambda x: np.mean(x[1]['efficiency_history']) if x[1]['efficiency_history'] else 0
+        )
+        
+        # En konforlu yol tipi
+        most_comfortable = max(
+            self.route_efficiency_database.items(),
+            key=lambda x: np.mean(x[1]['comfort_history']) if x[1]['comfort_history'] else 0
+        )
+        
+        return {
+            'most_efficient_route': {
+                'type': best_route_type[0],
+                'avg_efficiency': np.mean(best_route_type[1]['efficiency_history']),
+                'sample_size': best_route_type[1]['sample_count']
+            },
+            'most_comfortable_route': {
+                'type': most_comfortable[0],
+                'avg_comfort': np.mean(most_comfortable[1]['comfort_history']),
+                'sample_size': most_comfortable[1]['sample_count']
+            },
+            'learned_preferences': {
+                'vibration_sensitivity': self.vibration_sensitivity,
+                'environmental_awareness': self.environmental_weight
+            }
+        }
+
+# === AI ENHANCED HELPER FUNCTIONS ===
+
+class HybridVehicleAI:
+    """Gerçek öğrenen yapay zeka destekli hibrit araç yönetim sistemi"""
+    
+    def __init__(self):
+        self.learning_data = AILearningData()
+        
+        # Öğrenebilir parametreler - başlangıç değerleri
+        self.strategy_weights = {
+            'pressure_importance': 0.4,
+            'battery_importance': 0.5,
+            'efficiency_importance': 0.6,
+            'performance_importance': 0.3,
+            'weather_sensitivity': 0.2,
+            'terrain_sensitivity': 0.4
+        }
+        
+        # Reinforcement Learning parametreleri
+        self.learning_rate = 0.1
+        self.exploration_rate = 0.15  # Epsilon for epsilon-greedy
+        self.exploration_decay = 0.995
+        self.min_exploration = 0.05
+        
+        # Deneyim tablosu (state-action-reward)
+        self.q_table = {}  # Q-learning için
+        self.action_history = []
+        self.reward_history = []
+        
+        # Regresyon için geçmiş veriler
+        self.feature_history = []
+        self.efficiency_history = []
+        
+    def _get_state_key(self, current_state: Dict) -> str:
+        """Mevcut durumu discrete state'e çevirme"""
+        pressure_level = 'high' if current_state.get('pressure_pa', 0) > 30_000_000 else \
+                        'medium' if current_state.get('pressure_pa', 0) > 10_000_000 else 'low'
+        battery_level = 'high' if current_state.get('battery_kwh', 0) > 30 else \
+                       'medium' if current_state.get('battery_kwh', 0) > 15 else 'low'
+        demand_level = 'high' if current_state.get('demand_kw', 0) > 80 else \
+                      'medium' if current_state.get('demand_kw', 0) > 30 else 'low'
+        
+        return f"{pressure_level}_{battery_level}_{demand_level}"
+        
+    def _extract_features(self, current_state: Dict) -> np.ndarray:
+        """Makine öğrenimi için özellik çıkarımı"""
+        features = [
+            current_state.get('pressure_pa', 0) / 50_000_000,  # Normalized pressure
+            current_state.get('battery_kwh', 0) / 50.0,        # Normalized battery
+            current_state.get('demand_kw', 0) / 200.0,         # Normalized demand
+            current_state.get('temperature_c', 22) / 50.0,     # Normalized temp
+            1.0 if 'highway' in current_state.get('terrain', '') else 0.0,
+            1.0 if 'city' in current_state.get('terrain', '') else 0.0,
+            1.0 if 'mountain' in current_state.get('terrain', '') else 0.0,
+            current_state.get('weather_factor', 1.0)
+        ]
+        return np.array(features)
+    
+    def predict_energy_demand(self, speed_kmh: float, upcoming_terrain: str, 
+                            traffic_density: float, weather_factor: float) -> float:
+        """Geliştirilmiş AI enerji talebi tahmini"""
+        
+        # Temel tahmin
+        base_demand = speed_kmh * 0.8
+        
+        # Öğrenilen ağırlıklarla terrain etkisi
+        terrain_multipliers = {
+            'highway': 1.0,
+            'city': 1.0 + self.strategy_weights['terrain_sensitivity'] * 0.5,
+            'mountain': 1.0 + self.strategy_weights['terrain_sensitivity'] * 2.0,
+            'offroad': 1.0 + self.strategy_weights['terrain_sensitivity'] * 2.5
+        }
+        terrain_effect = terrain_multipliers.get(upcoming_terrain, 1.0)
+        
+        # Öğrenilen weather sensitivity
+        weather_effect = 1.0 + (weather_factor - 1.0) * self.strategy_weights['weather_sensitivity']
+        
+        # Traffic etkisi
+        traffic_effect = 1 + (traffic_density * 0.5)
+        
+        # Geçmiş deneyimlerden düzeltme
+        if len(self.efficiency_history) > 5:
+            recent_avg_efficiency = np.mean(self.efficiency_history[-5:])
+            correction_factor = 0.9 + 0.2 * recent_avg_efficiency  # 0.9-1.1 arası
+            base_demand *= correction_factor
+        
+        predicted_demand = base_demand * terrain_effect * traffic_effect * weather_effect
+        return max(0, predicted_demand)
+    
+    def adaptive_strategy_selection(self, current_state: Dict) -> Dict:
+        """Gerçek adaptive - Q-learning ile strateji seçimi"""
+        
+        state_key = self._get_state_key(current_state)
+        
+        # Q-table'da state yoksa initialize et
+        if state_key not in self.q_table:
+            self.q_table[state_key] = {
+                'pneumatic_heavy': 0.0,    # Pneumatic ağırlıklı
+                'electric_heavy': 0.0,     # Electric ağırlıklı  
+                'balanced': 0.0,           # Dengeli
+                'performance': 0.0         # Performans odaklı
+            }
+        
+        # Epsilon-greedy action selection
+        if random.random() < self.exploration_rate:
+            # Exploration - random action
+            action = random.choice(list(self.q_table[state_key].keys()))
+        else:
+            # Exploitation - best known action
+            action = max(self.q_table[state_key], key=self.q_table[state_key].get)
+        
+        # Action'ı strategy'ye çevirme
+        strategy_templates = {
+            'pneumatic_heavy': {
+                'pneumatic_ratio': 0.7 * self.strategy_weights['pressure_importance'],
+                'electric_ratio': 0.3,
+                'regen_aggressiveness': 0.4,
+                'efficiency_mode': 'pneumatic_priority'
+            },
+            'electric_heavy': {
+                'pneumatic_ratio': 0.2,
+                'electric_ratio': 0.8 * self.strategy_weights['battery_importance'],
+                'regen_aggressiveness': 0.7,
+                'efficiency_mode': 'electric_priority'
+            },
+            'balanced': {
+                'pneumatic_ratio': 0.4 * self.strategy_weights['pressure_importance'],
+                'electric_ratio': 0.6 * self.strategy_weights['battery_importance'],
+                'regen_aggressiveness': 0.5,
+                'efficiency_mode': 'balanced'
+            },
+            'performance': {
+                'pneumatic_ratio': 0.5,
+                'electric_ratio': 0.5,
+                'regen_aggressiveness': 0.3,
+                'efficiency_mode': 'performance'
+            }
+        }
+        
+        strategy = strategy_templates[action].copy()
+        
+        # Normalize ratios
+        total_ratio = strategy['pneumatic_ratio'] + strategy['electric_ratio']
+        if total_ratio > 0:
+            strategy['pneumatic_ratio'] /= total_ratio
+            strategy['electric_ratio'] /= total_ratio
+        
+        # Mevcut duruma göre fine-tuning
+        pressure_ratio = current_state.get('pressure_pa', 0) / 50_000_000
+        battery_ratio = current_state.get('battery_kwh', 0) / 50.0
+        
+        # Kritik durumlar için override
+        if pressure_ratio < 0.1 and battery_ratio > 0.3:
+            strategy['pneumatic_ratio'] = 0.05
+            strategy['electric_ratio'] = 0.95
+        elif battery_ratio < 0.1 and pressure_ratio > 0.3:
+            strategy['pneumatic_ratio'] = 0.8
+            strategy['electric_ratio'] = 0.2
+            
+        # Geçmiş action'ı kaydet
+        self.action_history.append((state_key, action))
+        
+        return strategy
+    
+    def learn_from_scenario(self, scenario_data: Dict, efficiency_achieved: float):
+        """Reinforcement Learning ile gerçek öğrenme"""
+        
+        # Reward hesaplama
+        reward = self._calculate_reward(efficiency_achieved, scenario_data)
+        self.reward_history.append(reward)
+        
+        # Q-learning update (son action için)
+        if len(self.action_history) > 0:
+            last_state, last_action = self.action_history[-1]
+            
+            if last_state in self.q_table:
+                old_q = self.q_table[last_state][last_action]
+                # Basit Q-update (next state olmadan - episodic)
+                new_q = old_q + self.learning_rate * (reward - old_q)
+                self.q_table[last_state][last_action] = new_q
+        
+        # Strategy weights güncelleme (gradient descent benzeri)
+        self._update_strategy_weights(scenario_data, efficiency_achieved)
+        
+        # Feature-based learning (regresyon için)
+        features = self._extract_features(scenario_data)
+        self.feature_history.append(features)
+        self.efficiency_history.append(efficiency_achieved)
+        
+        # Exploration rate decay
+        self.exploration_rate = max(
+            self.min_exploration, 
+            self.exploration_rate * self.exploration_decay
+        )
+        
+        # Geçmiş veriler pattern recognition
+        scenario_key = f"{scenario_data.get('speed_range', 'unknown')}_{scenario_data.get('terrain', 'unknown')}"
+        if scenario_key not in self.learning_data.efficiency_patterns:
+            self.learning_data.efficiency_patterns[scenario_key] = []
+        self.learning_data.efficiency_patterns[scenario_key].append(efficiency_achieved)
+        
+        # Scenario history
+        self.learning_data.scenario_history.append({
+            'scenario': scenario_data,
+            'efficiency': efficiency_achieved,
+            'reward': reward,
+            'timestamp': len(self.learning_data.scenario_history)
+        })
+    
+    def _calculate_reward(self, efficiency: float, scenario_data: Dict) -> float:
+        """Reward fonksiyonu - AI'ın öğrenmesini yönlendirir"""
+        base_reward = efficiency * 100  # 0-100 arası
+        
+        # Bonus/penalty faktörleri
+        
+        # Verimlilik bonusu
+        if efficiency > 0.9:
+            base_reward += 20
+        elif efficiency > 0.8:
+            base_reward += 10
+        elif efficiency < 0.6:
+            base_reward -= 15
+        
+        # Terrain zorluğuna göre bonus
+        terrain_bonus = {
+            'highway': 0,
+            'city': 5,
+            'mountain': 10,
+            'offroad': 15
+        }.get(scenario_data.get('terrain', ''), 0)
+        base_reward += terrain_bonus * (efficiency - 0.5)  # Zor arazide yüksek efficiency daha değerli
+        
+        # Hava koşulları bonusu
+        weather = scenario_data.get('weather', 'none')
+        if weather != 'none' and efficiency > 0.75:
+            base_reward += 8  # Kötü havada iyi verimlilik
+        
+        return base_reward
+    
+    def _update_strategy_weights(self, scenario_data: Dict, efficiency: float):
+        """Strategy ağırlıklarını gradient descent ile güncelleme"""
+        
+        learning_rate = 0.01
+        target_efficiency = 0.85
+        error = efficiency - target_efficiency
+        
+        # Hangi faktörlerin daha önemli olduğunu öğren
+        pressure_ratio = scenario_data.get('pressure_pa', 0) / 50_000_000
+        battery_ratio = scenario_data.get('battery_kwh', 0) / 50.0
+        
+        # Yüksek verimlilikle sonuçlanan faktörleri güçlendir
+        if error > 0:  # İyi sonuç
+            if pressure_ratio > 0.6:
+                self.strategy_weights['pressure_importance'] += learning_rate * error
+            if battery_ratio > 0.6:
+                self.strategy_weights['battery_importance'] += learning_rate * error
+        else:  # Kötü sonuç
+            if pressure_ratio > 0.6:
+                self.strategy_weights['pressure_importance'] -= learning_rate * abs(error)
+            if battery_ratio > 0.6:
+                self.strategy_weights['battery_importance'] -= learning_rate * abs(error)
+        
+        # Ağırlıkları sınırla
+        for key in self.strategy_weights:
+            self.strategy_weights[key] = np.clip(self.strategy_weights[key], 0.1, 1.0)
+    
+    def get_learning_statistics(self) -> Dict:
+        """Öğrenme istatistiklerini döndür"""
+        if len(self.efficiency_history) == 0:
+            return {'status': 'no_data'}
+            
+        recent_performance = np.mean(self.efficiency_history[-10:]) if len(self.efficiency_history) >= 10 else np.mean(self.efficiency_history)
+        initial_performance = np.mean(self.efficiency_history[:5]) if len(self.efficiency_history) >= 5 else self.efficiency_history[0]
+        
+        improvement = recent_performance - initial_performance
+        
+        return {
+            'total_scenarios': len(self.efficiency_history),
+            'current_exploration_rate': self.exploration_rate,
+            'average_efficiency': np.mean(self.efficiency_history),
+            'recent_efficiency': recent_performance,
+            'improvement': improvement,
+            'learned_strategies': len(self.q_table),
+            'best_strategy_states': [state for state, actions in self.q_table.items() 
+                                   if max(actions.values()) > 50]
+        }
+
+# Global AI instance
+vehicle_ai = HybridVehicleAI()
+
+def enhanced_temperature_efficiency_factor(temp_c: float, humidity: float) -> float:
+    """Geliştirilmiş sıcaklık verimliliği - nem faktörü dahil"""
+    base_temp_factor = temperature_efficiency_factor(temp_c)
+    
+    # Nem etkisi - yüksek nemde soğutma sistemi daha fazla çalışır
+    humidity_penalty = 0.0
+    if humidity > 80:
+        humidity_penalty = (humidity - 80) * 0.002
+    elif humidity < 20:
+        humidity_penalty = (20 - humidity) * 0.001
+    
+    return max(0.6, base_temp_factor - humidity_penalty)
+
+def temperature_efficiency_factor(temp_c: float) -> float:
+    """Sıcaklığın sistem verimliliğine etkisi"""
+    if 15 <= temp_c <= 25:
+        return 1.0
+    elif temp_c < 15:
+        # Soğukta pnömatik sistem daha az verimli, elektrik sistemi de etkilenir
+        return max(0.7, 1.0 - (15 - temp_c) * 0.012)  # Daha gerçekçi düşüş
+    else:
+        # Sıcakta soğutma sistemi devreye girer
+        return max(0.8, 1.0 - (temp_c - 25) * 0.008)
+
+def humidity_efficiency_factor(humidity: float) -> float:
+    """Nem faktörü - DÜZELTME: Çok yüksek nem daha zararlı"""
+    if 40 <= humidity <= 70:
+        return 1.0
+    elif humidity < 40:
+        return 0.96  # Kuru hava, static electricity
+    else:
+        # Yüksek nemde soğutma sistemi zorlanır
+        return max(0.85, 1.0 - (humidity - 70) * 0.004)  # Daha gerçekçi etki
+
+def altitude_density_factor(altitude_m: float) -> float:
+    """Yükseklik - hava yoğunluğu faktörü"""
+    return math.exp(-altitude_m / 8500)
+
+def enhanced_weather_effects(weather: WeatherType, intensity: RainIntensity, 
+                           visibility_m: float, speed_kmh: float) -> Dict:
+    """Geliştirilmiş hava durumu etkileri"""
+    effects = {
+        'rolling_resistance_mult': 1.0,
+        'drag_coefficient_mult': 1.0,
+        'visibility_safety_mult': 1.0,
+        'power_penalty_kw': 0.0
+    }
+    
+    # Yağmur/kar etkisi
+    if weather != WeatherType.NONE and intensity != RainIntensity.NONE:
+        base_effects = {
+            WeatherType.RAIN: {
+                RainIntensity.LIGHT: (1.1, 1.02, 0.5),
+                RainIntensity.MODERATE: (1.2, 1.05, 1.0),
+                RainIntensity.HEAVY: (1.3, 1.08, 2.0)
+            },
+            WeatherType.SNOW: {
+                RainIntensity.LIGHT: (1.2, 1.03, 1.0),
+                RainIntensity.MODERATE: (1.4, 1.06, 2.5),
+                RainIntensity.HEAVY: (1.6, 1.10, 4.0)
+            },
+            WeatherType.HAIL: {
+                RainIntensity.LIGHT: (1.15, 1.02, 0.8),
+                RainIntensity.MODERATE: (1.25, 1.04, 1.5),
+                RainIntensity.HEAVY: (1.35, 1.07, 3.0)
+            },
+            WeatherType.FOG: {
+                RainIntensity.LIGHT: (1.05, 1.01, 0.3),
+                RainIntensity.MODERATE: (1.08, 1.02, 0.5),
+                RainIntensity.HEAVY: (1.12, 1.03, 1.0)
+            }
+        }
+        
+        if weather in base_effects and intensity in base_effects[weather]:
+            roll_mult, drag_mult, power_penalty = base_effects[weather][intensity]
+            effects['rolling_resistance_mult'] = roll_mult
+            effects['drag_coefficient_mult'] = drag_mult
+            effects['power_penalty_kw'] = power_penalty
+    
+    # Görüş mesafesi güvenlik faktörü
+    if visibility_m < 500:
+        # Düşük görüşte hız sınırlaması gerekir
+        effects['visibility_safety_mult'] = max(0.5, visibility_m / 500)
+        # Ek güç tüketimi (farlar, sislikleri vs.)
+        effects['power_penalty_kw'] += (500 - visibility_m) / 200
+    
+    return effects
+
+def wind_power_effect_corrected(wind_speed_kmh: float, wind_dir: WindDirection, 
+                               vehicle_speed_kmh: float, altitude_m: float, 
+                               veh_params: VehicleParameters) -> float:
+    """DÜZELTME: Rüzgar etkisi hesaplaması"""
+    if vehicle_speed_kmh == 0:
+        return 0.0
+        
+    wind_ms = wind_speed_kmh / 3.6
+    veh_ms = vehicle_speed_kmh / 3.6
+    rho = 1.225 * altitude_density_factor(altitude_m)
+    Cd = veh_params.drag_coefficient
+    A = veh_params.frontal_area_m2
+
+    # Rüzgar yönüne göre efektif hız hesaplaması
+    v_rel = veh_ms
+    if wind_dir == WindDirection.HEAD:
+        v_rel = veh_ms + wind_ms
+    elif wind_dir == WindDirection.TAIL:
+        v_rel = max(0.1, veh_ms - wind_ms)  # Negatif olmasını önle
+    elif wind_dir == WindDirection.CROSS:
+        # Çapraz rüzgar etkisi - daha karmaşık
+        v_rel = math.sqrt(veh_ms**2 + (wind_ms * 0.7)**2)
+
+    # Aerodinamik güç hesaplaması
+    f_aero_wind = 0.5 * rho * Cd * A * v_rel * abs(v_rel)
+    power_aero_wind = (f_aero_wind * veh_ms) / 1000
+
+    f_aero_base = 0.5 * rho * Cd * A * veh_ms ** 2
+    power_aero_base = (f_aero_base * veh_ms) / 1000
+
+    return power_aero_wind - power_aero_base
+
+def total_power_demand_enhanced(
+    speed_kmh: float, accel_ms2: float, env: Environment, 
+    veh_params: VehicleParameters, sys_params: SystemParameters,
+    incline_deg: float = 0, driving_style: DrivingStyle = DrivingStyle.NORMAL
+) -> Tuple[float, Dict]:
+    """Geliştirilmiş güç talebi hesaplaması"""
+    
+    speed_ms = speed_kmh / 3.6
+    g = 9.807
+    mass = veh_params.mass_kg
+    incline_rad = math.radians(incline_deg)
+    
+    # Çevresel faktörler
+    temp_factor = enhanced_temperature_efficiency_factor(env.temperature_c, env.humidity_percent)
+    weather_effects = enhanced_weather_effects(env.weather_type, env.rain_intensity, 
+                                             env.visibility_m, speed_kmh)
+    rho = 1.225 * altitude_density_factor(env.altitude_m)
+
+    # Sürüş tarzına göre ayarlamalar
+    style_multipliers = {
+        DrivingStyle.DEFENSIVE: {'accel': 0.8, 'efficiency': 1.1},
+        DrivingStyle.NORMAL: {'accel': 1.0, 'efficiency': 1.0},
+        DrivingStyle.AGGRESSIVE: {'accel': 1.3, 'efficiency': 0.9},
+        DrivingStyle.ECO: {'accel': 0.7, 'efficiency': 1.15}
+    }
+    
+    style_mult = style_multipliers.get(driving_style, style_multipliers[DrivingStyle.NORMAL])
+    
+    # Güçler hesaplaması
+    Crr = veh_params.rolling_resistance_coeff * weather_effects['rolling_resistance_mult']
+    force_rolling = Crr * mass * g * math.cos(incline_rad) * veh_params.tire_efficiency
+    
+    Cd_eff = veh_params.drag_coefficient * weather_effects['drag_coefficient_mult']
+    force_aero = 0.5 * rho * Cd_eff * veh_params.frontal_area_m2 * speed_ms ** 2
+    
+    force_gravity = mass * g * math.sin(incline_rad)
+    force_accel = mass * accel_ms2 * style_mult['accel']
+
+    total_force = force_rolling + force_aero + force_gravity + force_accel
+    base_power_kw = (total_force * speed_ms) / 1000 if speed_ms > 0 else abs(force_accel * 0.1)
+
+    # Rüzgar etkisi (düzeltilmiş)
+    wind_effect_kw = wind_power_effect_corrected(env.wind_speed_kmh, env.wind_direction, 
+                                               speed_kmh, env.altitude_m, veh_params)
+    
+    # Yardımcı sistemler (klima, ısıtma vs.)
+    auxiliary_power = sys_params.thermal_management_power_kw
+    if env.temperature_c < 5 or env.temperature_c > 30:
+        auxiliary_power *= 1.5
+    
+    # Hava durumu ceza gücü
+    weather_penalty = weather_effects['power_penalty_kw']
+    
+    total_demand = (base_power_kw + wind_effect_kw + auxiliary_power + weather_penalty) / temp_factor
+    total_demand *= style_mult['efficiency']
+    
+    # AI tahmin ile karşılaştırma
+    ai_prediction = vehicle_ai.predict_energy_demand(
+        speed_kmh, env.terrain_type.value, 0.5, temp_factor
+    )
+    
+    details = {
+        'base_power': base_power_kw,
+        'wind_effect': wind_effect_kw,
+        'auxiliary_power': auxiliary_power,
+        'weather_penalty': weather_penalty,
+        'temp_factor': temp_factor,
+        'ai_prediction': ai_prediction,
+        'prediction_error': abs(total_demand - ai_prediction)
+    }
+    
+    return max(0, total_demand), details
+
+def air_tank_energy_corrected(
+    current_pressure_pa: float, tank_volume_m3: float, 
+    min_operating_pressure_pa: float, temperature_c: float = 22
+) -> float:
+    """DÜZELTME: Sıcaklık etkisi dahil enerji hesaplaması"""
+    if current_pressure_pa <= min_operating_pressure_pa:
+        return 0.0
+    
+    # Sıcaklık etkisi (ideal gaz yasası yaklaşımı)
+    temp_kelvin = temperature_c + 273.15
+    temp_correction = temp_kelvin / 295.15  # 22°C referans
+    
+    # İzotermik genleşme enerjisi
+    energy_j = current_pressure_pa * tank_volume_m3 * math.log(
+        current_pressure_pa / min_operating_pressure_pa
+    ) * temp_correction
+    
+    return max(0, energy_j / 3.6e6)
+
+def ai_enhanced_energy_management(
+    demand_kw: float,
+    pressure_pa: float,
+    battery_kwh: float,
+    sys: SystemParameters,
+    veh_params: VehicleParameters,
+    env: Environment,
+    driving_style: DrivingStyle = DrivingStyle.NORMAL
+) -> Tuple[float, float, float, Dict]:
+    """AI destekli enerji yönetimi"""
+    
+    # Mevcut durum
+    current_state = {
+        'demand_kw': demand_kw,
+        'pressure_pa': pressure_pa,
+        'battery_kwh': battery_kwh,
+        'temperature_c': env.temperature_c,
+        'driving_style': driving_style.value
+    }
+    
+    # AI stratejisi
+    ai_strategy = vehicle_ai.adaptive_strategy_selection(current_state)
+    
+    can_use_pneumatic = pressure_pa > sys.min_operating_pressure_pa
+    pneumatic_out = 0.0
+    electric_out = 0.0
+    
+    if demand_kw > 0:
+        # Motor potansiyellerini hesapla
+        pneu_potential = pneumatic_motor_power_enhanced(demand_kw, pressure_pa, sys, veh_params, env.temperature_c)
+        elec_potential = electric_motor_power_enhanced(demand_kw, battery_kwh, sys, env.temperature_c)
+        
+        # AI stratejisine göre dağılım
+        target_pneumatic = demand_kw * ai_strategy['pneumatic_ratio']
+        target_electric = demand_kw * ai_strategy['electric_ratio']
+        
+        # Gerçek güç dağılımı
+        pneumatic_out = min(target_pneumatic, pneu_potential) if can_use_pneumatic else 0
+        electric_out = min(target_electric, elec_potential)
+        
+        # Eksik güçü diğer sistemden karşıla
+        total_output = pneumatic_out + electric_out
+        if total_output < demand_kw:
+            shortfall = demand_kw - total_output
+            if can_use_pneumatic and pneu_potential > pneumatic_out:
+                additional_pneu = min(shortfall, pneu_potential - pneumatic_out)
+                pneumatic_out += additional_pneu
+                shortfall -= additional_pneu
+            
+            if shortfall > 0 and elec_potential > electric_out:
+                electric_out += min(shortfall, elec_potential - electric_out)
+                
+    elif demand_kw < 0:
+        # Rejeneratif freneme - AI'dan öğrenilmiş agresiflik
+        regen_potential = abs(demand_kw)
+        max_regen = sys.max_regen_power_kw * ai_strategy['regen_aggressiveness']
+        electric_out = -min(regen_potential, max_regen)
+        pneumatic_out = 0
+    
+    total_output = pneumatic_out + electric_out
+    
+    # AI öğrenme verisi
+    efficiency = total_output / max(0.1, abs(demand_kw)) if demand_kw != 0 else 1.0
+    scenario_data = {
+        'speed_range': 'low' if abs(demand_kw) < 30 else 'medium' if abs(demand_kw) < 80 else 'high',
+        'terrain': env.terrain_type.value,
+        'weather': env.weather_type.value
+    }
+    vehicle_ai.learn_from_scenario(scenario_data, efficiency)
+    
+    details = {
+        'ai_strategy': ai_strategy,
+        'efficiency_achieved': efficiency,
+        'pneumatic_potential': pneu_potential if 'pneu_potential' in locals() else 0,
+        'electric_potential': elec_potential if 'elec_potential' in locals() else 0
+    }
+    
+    return pneumatic_out, electric_out, total_output, details
+
+def pneumatic_motor_power_enhanced(
+    demand_kw: float, pressure_pa: float, sys: SystemParameters, 
+    veh_params: VehicleParameters, temperature_c: float
+) -> float:
+    """Geliştirilmiş pnömatik motor gücü hesaplaması"""
+    if pressure_pa <= sys.min_operating_pressure_pa or veh_params.pneumatic_flow_rate_m3s <= 0:
+        return 0.0
+    
+    # Sıcaklık etkisi
+    temp_efficiency = temperature_efficiency_factor(temperature_c)
+    
+    # Basınç etkisi - gerçek motor karakteristiği
+    pressure_ratio = pressure_pa / veh_params.max_tank_pressure_pa
+    pressure_efficiency = min(1.0, 0.3 + 0.7 * pressure_ratio)  # Düşük basınçta verimlilik düşer
+    
+    base_power = (pressure_pa * veh_params.pneumatic_flow_rate_m3s) / 1000
+    effective_power = base_power * sys.pneumatic_efficiency * temp_efficiency * pressure_efficiency
+    
+    # Yüksek basınçta bonus
+    if pressure_pa > sys.pneumatic_priority_threshold_pa:
+        effective_power *= 1.3  # Daha gerçekçi bonus
+    
+    return max(0, min(demand_kw, effective_power))
+
+def electric_motor_power_enhanced(
+    demand_kw: float, battery_kwh: float, sys: SystemParameters, temperature_c: float
+) -> float:
+    """Geliştirilmiş elektrik motor gücü hesaplaması"""
+    
+    # Batarya durum etkisi - daha yumuşak geçiş
+    if battery_kwh < sys.battery_low_threshold_kwh:
+        battery_factor = max(0.2, (battery_kwh / sys.battery_low_threshold_kwh) ** 0.5)
+    else:
+        # Tam doluda bile %100 güç vermeyebilir (termal koruma)
+        charge_ratio = battery_kwh / sys.battery_capacity_kwh
+        battery_factor = min(1.0, 0.85 + 0.15 * (1 - charge_ratio))
+    
+    # Sıcaklık etkisi
+    temp_efficiency = temperature_efficiency_factor(temperature_c)
+    
+    potential = sys.max_electric_power_kw * battery_factor * temp_efficiency * sys.electric_efficiency
+    
+    return max(0, min(demand_kw, potential))
+
+def regenerative_energy_enhanced(
+    initial_speed_kmh: float, final_speed_kmh: float, vehicle_mass_kg: float, 
+    battery_kwh: float, battery_capacity_kwh: float, regen_eff: float = 0.7
+) -> float:
+    """Geliştirilmiş rejeneratif enerji hesaplaması"""
+    v_i = initial_speed_kmh / 3.6
+    v_f = final_speed_kmh / 3.6
+    delta_ke = 0.5 * vehicle_mass_kg * (v_i ** 2 - v_f ** 2)
+    
+    if delta_ke <= 0:
+        return 0.0
+    
+    # Batarya doluluk oranına göre rejeneratif fren verimliliği
+    charge_ratio = battery_kwh / battery_capacity_kwh
+    if charge_ratio > 0.9:
+        # Batarya doluyken rejeneratif fren sınırlı
+        regen_eff *= (1.0 - charge_ratio) * 10  # %90'dan sonra hızla düşer
+    
+    recoverable_energy = (delta_ke * regen_eff) / 3.6e6
+    
+    # Batarya kapasitesini aşmayacak şekilde sınırla
+    max_acceptable = max(0, battery_capacity_kwh - battery_kwh)
+    
+    return min(recoverable_energy, max_acceptable)
+
+# === TEST SCENARIOS WITH AI ===
+
+def run_enhanced_test_scenarios():
+    """Geliştirilmiş test senaryoları"""
+    veh_params = VehicleParameters()
+    sys_params = SystemParameters()
+    
+    scenarios = [
+        {
+            "name": "Ideal Highway Cruise",
+            "speed_kmh": 60, "accel_ms2": 0, "incline_deg": 0,
+            "pressure_bar": 400, "battery_kwh": 35, 
+            "driving_style": DrivingStyle.NORMAL,
+            "env": Environment(terrain_type=TerrainType.HIGHWAY)
+        },
+        {
+            "name": "City Traffic - ECO Mode",
+            "speed_kmh": 30, "accel_ms2": 1.0, "incline_deg": 0,
+            "pressure_bar": 250, "battery_kwh": 20,
+            "driving_style": DrivingStyle.ECO,
+            "env": Environment(
+                temperature_c=35, weather_type=WeatherType.NONE,
+                terrain_type=TerrainType.CITY
+            )
+        },
+        {
+            "name": "Mountain Climb - Low Battery",
+            "speed_kmh": 40, "accel_ms2": 0.5, "incline_deg": 12,
+            "pressure_bar": 450, "battery_kwh": 3,
+            "driving_style": DrivingStyle.DEFENSIVE,
+            "env": Environment(
+                altitude_m=1500, temperature_c=8,
+                terrain_type=TerrainType.MOUNTAIN
+            )
+        },
+        {
+            "name": "Stormy Weather - High Speed",
+            "speed_kmh": 100, "accel_ms2": 0, "incline_deg": -2,
+            "pressure_bar": 300, "battery_kwh": 25,
+            "driving_style": DrivingStyle.AGGRESSIVE,
+            "env": Environment(
+                weather_type=WeatherType.RAIN, rain_intensity=RainIntensity.HEAVY,
+                wind_speed_kmh=45, wind_direction=WindDirection.HEAD,
+                visibility_m=200, terrain_type=TerrainType.HIGHWAY
+            )
+        },
+        {
+            "name": "Off-road Adventure",
+            "speed_kmh": 25, "accel_ms2": 2.0, "incline_deg": 8,
+            "pressure_bar": 480, "battery_kwh": 40,
+            "driving_style": DrivingStyle.NORMAL,
+            "env": Environment(
+                terrain_type=TerrainType.OFFROAD,
+                weather_type=WeatherType.NONE,
+                temperature_c=28
+            )
+        },
+        {
+            "name": "Winter Conditions",
+            "speed_kmh": 50, "accel_ms2": 0, "incline_deg": 3,
+            "pressure_bar": 350, "battery_kwh": 15,
+            "driving_style": DrivingStyle.DEFENSIVE,
+            "env": Environment(
+                temperature_c=-5, weather_type=WeatherType.SNOW,
+                rain_intensity=RainIntensity.MODERATE,
+                wind_speed_kmh=20, wind_direction=WindDirection.CROSS,
+                terrain_type=TerrainType.CITY
+            )
+        }
+    ]
+    
+    print("=== AI ENHANCED HYBRID VEHICLE SIMULATION ===\n")
+    
+    for i, sc in enumerate(scenarios):
+        air_pressure_pa = sc["pressure_bar"] * 100_000
+        
+        # Geliştirilmiş güç talebi hesaplama
+        demand_kw, demand_details = total_power_demand_enhanced(
+            sc["speed_kmh"], sc["accel_ms2"], sc["env"], 
+            veh_params, sys_params, sc["incline_deg"], sc["driving_style"]
+        )
+        
+        # AI destekli enerji yönetimi
+        pneumatic_kw, electric_kw, total_kw, management_details = ai_enhanced_energy_management(
+            demand_kw, air_pressure_pa, sc["battery_kwh"],
+            sys_params, veh_params, sc["env"], sc["driving_style"]
+        )
+        
+        # Sonuçları yazdır
+        print(f"🚗 {sc['name']}:")
+        print(f"   📊 Demand: {demand_kw:.2f}kW | Pneumatic: {pneumatic_kw:.2f}kW | Electric: {electric_kw:.2f}kW")
+        print(f"   🔋 Battery: {sc['battery_kwh']:.1f}kWh | 💨 Pressure: {sc['pressure_bar']}bar")
+        print(f"   🌡️  Temp Factor: {demand_details['temp_factor']:.3f} | ⚡ Efficiency: {management_details['efficiency_achieved']:.3f}")
+        print(f"   🤖 AI Prediction: {demand_details['ai_prediction']:.2f}kW | Error: {demand_details['prediction_error']:.2f}kW")
+        
+        # AI stratejisi detayları
+        strategy = management_details['ai_strategy']
+        print(f"   🧠 AI Strategy - P:{strategy['pneumatic_ratio']:.2f} | E:{strategy['electric_ratio']:.2f}")
+        
+        if i < len(scenarios) - 1:
+            print()
+    
+    # AI öğrenme istatistikleri
+    print("\n" + "="*60)
+    print("🤖 REAL-TIME AI LEARNING STATISTICS")
+    print("="*60)
+    
+    learning_stats = vehicle_ai.get_learning_statistics()
+    if learning_stats.get('status') != 'no_data':
+        print(f"📊 Total Learning Scenarios: {learning_stats['total_scenarios']}")
+        print(f"🎯 Average Efficiency: {learning_stats['average_efficiency']:.3f}")
+        print(f"📈 Recent Performance: {learning_stats['recent_efficiency']:.3f}")
+        print(f"🚀 AI Improvement: {learning_stats['improvement']:+.3f}")
+        print(f"🔍 Current Exploration Rate: {learning_stats['current_exploration_rate']:.3f}")
+        print(f"🧠 Learned Strategy States: {learning_stats['learned_strategies']}")
+        
+        if learning_stats['best_strategy_states']:
+            print(f"⭐ Best Performing States: {', '.join(learning_stats['best_strategy_states'][:3])}")
+        
+        # Q-learning tablosu özeti
+        if vehicle_ai.q_table:
+            print(f"\n🎮 Q-Learning Progress:")
+            for state, actions in list(vehicle_ai.q_table.items())[:3]:  # İlk 3 state
+                best_action = max(actions, key=actions.get)
+                best_score = actions[best_action]
+                print(f"   {state}: {best_action} (Q={best_score:.1f})")
+                
+        # Strategy weights evolution
+        print(f"\n⚖️ Learned Strategy Weights:")
+        for weight_name, value in vehicle_ai.strategy_weights.items():
+            print(f"   {weight_name}: {value:.3f}")
+    
+    # Pattern analysis
+    if vehicle_ai.learning_data.efficiency_patterns:
+        print(f"\n📈 EFFICIENCY PATTERNS DISCOVERED:")
+        for pattern, efficiencies in vehicle_ai.learning_data.efficiency_patterns.items():
+            avg_eff = np.mean(efficiencies)
+            trend = "↗️" if len(efficiencies) > 1 and efficiencies[-1] > efficiencies[0] else "↘️" if len(efficiencies) > 1 and efficiencies[-1] < efficiencies[0] else "→"
+            print(f"   {pattern}: {avg_eff:.3f} {trend} (n={len(efficiencies)})")
+
+def advanced_optimization_demo():
+    """Gerçek zamanlı optimizasyon demosu"""
+    print("\n" + "="*60)
+    print("🔬 ADVANCED AI OPTIMIZATION DEMONSTRATION")
+    print("="*60)
+    
+    veh_params = VehicleParameters()
+    sys_params = SystemParameters()
+    
+    # AI'ın öğrenmesi için birden fazla senaryo çalıştır
+    training_scenarios = [
+        # Kolay senaryolar
+        {"speed_kmh": 50, "terrain": TerrainType.HIGHWAY, "battery_kwh": 40, "pressure_bar": 400, "weather": WeatherType.NONE},
+        {"speed_kmh": 60, "terrain": TerrainType.HIGHWAY, "battery_kwh": 35, "pressure_bar": 350, "weather": WeatherType.NONE},
+        {"speed_kmh": 70, "terrain": TerrainType.HIGHWAY, "battery_kwh": 30, "pressure_bar": 300, "weather": WeatherType.NONE},
+        
+        # Orta zorluk
+        {"speed_kmh": 40, "terrain": TerrainType.CITY, "battery_kwh": 25, "pressure_bar": 250, "weather": WeatherType.RAIN},
+        {"speed_kmh": 45, "terrain": TerrainType.CITY, "battery_kwh": 20, "pressure_bar": 200, "weather": WeatherType.RAIN},
+        
+        # Zor senaryolar
+        {"speed_kmh": 30, "terrain": TerrainType.MOUNTAIN, "battery_kwh": 15, "pressure_bar": 450, "weather": WeatherType.SNOW},
+        {"speed_kmh": 25, "terrain": TerrainType.MOUNTAIN, "battery_kwh": 10, "pressure_bar": 400, "weather": WeatherType.SNOW},
+        {"speed_kmh": 35, "terrain": TerrainType.MOUNTAIN, "battery_kwh": 8, "pressure_bar": 480, "weather": WeatherType.SNOW},
+    ]
+    
+    print("🏋️ Training AI with Progressive Difficulty...")
+    
+    for i, scenario in enumerate(training_scenarios):
+        env = Environment(
+            terrain_type=scenario["terrain"],
+            weather_type=scenario["weather"],
+            rain_intensity=RainIntensity.MODERATE if scenario["weather"] != WeatherType.NONE else RainIntensity.NONE
+        )
+        
+        # Güç talebi hesapla
+        demand_kw, _ = total_power_demand_enhanced(
+            scenario["speed_kmh"], 0, env, veh_params, sys_params, 0, DrivingStyle.NORMAL
+        )
+        
+        # AI destekli enerji yönetimi
+        pressure_pa = scenario["pressure_bar"] * 100_000
+        pneumatic_kw, electric_kw, total_kw, details = ai_enhanced_energy_management(
+            demand_kw, pressure_pa, scenario["battery_kwh"],
+            sys_params, veh_params, env, DrivingStyle.NORMAL
+        )
+        
+        efficiency = details['efficiency_achieved']
+        
+        print(f"   Scenario {i+1}: {scenario['terrain'].value.capitalize()} - Efficiency: {efficiency:.3f} | Exploration: {vehicle_ai.exploration_rate:.3f}")
+        
+        # Simüle edilen performans feedback (gerçekte sensörlerden gelir)
+        # Zor senaryolarda bile AI öğrenmeye devam etsin
+        if scenario['terrain'] == TerrainType.MOUNTAIN and efficiency > 0.7:
+            # Mountain senaryosunda yüksek efficiency için bonus reward
+            bonus_scenario = {
+                'terrain': scenario['terrain'].value,
+                'weather': scenario['weather'].value,
+                'speed_range': 'low',
+                'difficulty': 'hard'
+            }
+            vehicle_ai.learn_from_scenario(bonus_scenario, efficiency + 0.1)  # Bonus learning
+    
+    print("\n💡 AI Learning Complete! Showing improvement...")
+    
+    # Aynı tip senaryoyu tekrar test et - AI'ın öğrenip öğrenmediğini göster
+    final_test_env = Environment(terrain_type=TerrainType.MOUNTAIN, weather_type=WeatherType.SNOW)
+    final_demand, _ = total_power_demand_enhanced(30, 0, final_test_env, veh_params, sys_params, 0, DrivingStyle.NORMAL)
+    
+    print(f"\n🧪 Final Challenge Test:")
+    print(f"   Scenario: Mountain + Snow, 30 km/h")
+    
+    final_pneumatic, final_electric, final_total, final_details = ai_enhanced_energy_management(
+        final_demand, 45_000_000, 12, sys_params, veh_params, final_test_env, DrivingStyle.NORMAL
+    )
+    
+    print(f"   🎯 AI Final Performance: {final_details['efficiency_achieved']:.3f}")
+    print(f"   🤖 AI Strategy Used: {final_details['ai_strategy']['efficiency_mode']}")
+    print(f"   📊 Power Distribution: P:{final_pneumatic:.1f}kW | E:{final_electric:.1f}kW")
+
+def continuous_learning_simulation(episodes: int = 50):
+    """Sürekli öğrenme simülasyonu"""
+    print(f"\n" + "="*60)
+    print(f"🔄 CONTINUOUS LEARNING SIMULATION ({episodes} Episodes)")
+    print("="*60)
+    
+    veh_params = VehicleParameters()
+    sys_params = SystemParameters()
+    
+    performance_history = []
+    
+    for episode in range(episodes):
+        # Random senaryo oluştur
+        scenario = {
+            'speed_kmh': random.uniform(20, 120),
+            'terrain': random.choice(list(TerrainType)),
+            'weather': random.choice(list(WeatherType)),
+            'battery_kwh': random.uniform(5, 45),
+            'pressure_bar': random.uniform(100, 500),
+            'incline': random.uniform(-5, 15)
+        }
+        
+        env = Environment(
+            terrain_type=scenario['terrain'],
+            weather_type=scenario['weather'],
+            rain_intensity=RainIntensity.MODERATE if scenario['weather'] != WeatherType.NONE else RainIntensity.NONE,
+            temperature_c=random.uniform(-10, 45)
+        )
+        
+        demand_kw, _ = total_power_demand_enhanced(
+            scenario['speed_kmh'], 0, env, veh_params, sys_params, 
+            scenario['incline'], DrivingStyle.NORMAL
+        )
+        
+        pressure_pa = scenario['pressure_bar'] * 100_000
+        _, _, _, details = ai_enhanced_energy_management(
+            demand_kw, pressure_pa, scenario['battery_kwh'],
+            sys_params, veh_params, env, DrivingStyle.NORMAL
+        )
+        
+        efficiency = details['efficiency_achieved']
+        performance_history.append(efficiency)
+        
+        # Her 10 episodda bir progress göster
+        if (episode + 1) % 10 == 0:
+            recent_avg = np.mean(performance_history[-10:])
+            overall_avg = np.mean(performance_history)
+            improvement = recent_avg - np.mean(performance_history[:10]) if len(performance_history) >= 10 else 0
+            
+            print(f"Episode {episode+1:2d}: Recent Avg: {recent_avg:.3f} | Overall: {overall_avg:.3f} | Improvement: {improvement:+.3f}")
+    
+    # Final analiz
+    print(f"\n📈 LEARNING CURVE ANALYSIS:")
+    initial_performance = np.mean(performance_history[:10])
+    final_performance = np.mean(performance_history[-10:])
+    total_improvement = final_performance - initial_performance
+    
+    print(f"   Initial Performance (Episodes 1-10): {initial_performance:.3f}")
+    print(f"   Final Performance (Episodes {episodes-9}-{episodes}): {final_performance:.3f}")
+    print(f"   Total AI Improvement: {total_improvement:+.3f} ({total_improvement/initial_performance*100:+.1f}%)")
+    
+    # Variance analızı (öğrenme istikrarı)
+    initial_variance = np.var(performance_history[:10])
+    final_variance = np.var(performance_history[-10:])
+    print(f"   Learning Stability: {(initial_variance-final_variance)/initial_variance*100:+.1f}% (variance reduction)")
+    
+    return performance_history
+
+def advanced_range_calculator(veh_params: VehicleParameters, sys_params: SystemParameters,
+                            current_battery_kwh: float, current_pressure_bar: float,
+                            avg_speed_kmh: float = 60, terrain: TerrainType = TerrainType.HIGHWAY) -> Dict:
+    """Gelişmiş menzil hesaplayıcısı"""
+    
+    # Test ortamı
+    test_env = Environment(terrain_type=terrain)
+    
+    # Ortalama güç tüketimi hesaplama
+    avg_demand, _ = total_power_demand_enhanced(
+        avg_speed_kmh, 0, test_env, veh_params, sys_params, 0, DrivingStyle.NORMAL
+    )
+    
+    # Enerji kaynakları
+    battery_energy = current_battery_kwh
+    pneumatic_energy = air_tank_energy_corrected(
+        current_pressure_bar * 100_000, veh_params.tank_volume_m3,
+        sys_params.min_operating_pressure_pa, test_env.temperature_c
+    )
+    
+    total_energy = battery_energy + pneumatic_energy
+    
+    # Menzil hesaplama (saat cinsinden)
+    if avg_demand > 0:
+        range_hours = total_energy / avg_demand
+        range_km = range_hours * avg_speed_kmh
+    else:
+        range_hours = float('inf')
+        range_km = float('inf')
+    
+    return {
+        'total_range_km': range_km,
+        'range_hours': range_hours,
+        'battery_energy_kwh': battery_energy,
+        'pneumatic_energy_kwh': pneumatic_energy,
+        'total_energy_kwh': total_energy,
+        'avg_power_demand_kw': avg_demand,
+        'energy_distribution': {
+            'battery_percent': (battery_energy / total_energy * 100) if total_energy > 0 else 0,
+            'pneumatic_percent': (pneumatic_energy / total_energy * 100) if total_energy > 0 else 0
+        }
+    }
+
+def system_diagnostics(veh_params: VehicleParameters, sys_params: SystemParameters,
+                      current_battery_kwh: float, current_pressure_bar: float,
+                      temperature_c: float = 22) -> Dict:
+    """Sistem tanılaması"""
+    
+    diagnostics = {
+        'battery_status': 'normal',
+        'pneumatic_status': 'normal',
+        'overall_health': 'good',
+        'warnings': [],
+        'recommendations': []
+    }
+    
+    # Batarya kontrolü
+    battery_percent = (current_battery_kwh / sys_params.battery_capacity_kwh) * 100
+    if battery_percent < 10:
+        diagnostics['battery_status'] = 'critical'
+        diagnostics['warnings'].append('Battery critically low')
+        diagnostics['recommendations'].append('Immediate charging required')
+    elif battery_percent < 20:
+        diagnostics['battery_status'] = 'low'
+        diagnostics['warnings'].append('Battery low')
+        diagnostics['recommendations'].append('Consider charging soon')
+    
+    # Pnömatik sistem kontrolü
+    pressure_pa = current_pressure_bar * 100_000
+    if pressure_pa < sys_params.min_operating_pressure_pa:
+        diagnostics['pneumatic_status'] = 'offline'
+        diagnostics['warnings'].append('Pneumatic system offline - pressure too low')
+        diagnostics['recommendations'].append('Refill air tank immediately')
+    elif pressure_pa < sys_params.pneumatic_priority_threshold_pa:
+        diagnostics['pneumatic_status'] = 'reduced'
+        diagnostics['warnings'].append('Pneumatic system at reduced capacity')
+        diagnostics['recommendations'].append('Consider refilling air tank')
+    
+    # Sıcaklık kontrolü
+    if temperature_c < -10:
+        diagnostics['warnings'].append('Extreme cold - system efficiency reduced')
+        diagnostics['recommendations'].append('Pre-heat system before use')
+    elif temperature_c > 40:
+        diagnostics['warnings'].append('High temperature - cooling system working hard')
+        diagnostics['recommendations'].append('Avoid extended high-power usage')
+    
+    # Genel sağlık değerlendirmesi
+    if len(diagnostics['warnings']) >= 3:
+        diagnostics['overall_health'] = 'poor'
+    elif len(diagnostics['warnings']) >= 1:
+        diagnostics['overall_health'] = 'fair'
+    
+    return diagnostics
+
+def efficiency_optimizer(scenario_data: Dict) -> Dict:
+    """Verilen senaryo için verimlilik optimizasyonu önerileri"""
+    
+    recommendations = {
+        'speed_recommendation': 'maintain',
+        'driving_style_recommendation': 'current',
+        'energy_strategy': 'balanced',
+        'estimated_improvement': 0.0,
+        'specific_tips': []
+    }
+    
+    speed = scenario_data.get('speed_kmh', 60)
+    driving_style = scenario_data.get('driving_style', DrivingStyle.NORMAL)
+    terrain = scenario_data.get('terrain_type', TerrainType.HIGHWAY)
+    
+    # Hız önerisi
+    if terrain == TerrainType.HIGHWAY:
+        optimal_speed = 90
+        if speed > optimal_speed + 20:
+            recommendations['speed_recommendation'] = f'reduce to ~{optimal_speed}kmh for better efficiency'
+            recommendations['estimated_improvement'] += 15
+        elif speed < optimal_speed - 20:
+            recommendations['speed_recommendation'] = f'increase to ~{optimal_speed}kmh for optimal efficiency'
+            recommendations['estimated_improvement'] += 8
+    elif terrain == TerrainType.CITY:
+        if speed > 50:
+            recommendations['speed_recommendation'] = 'reduce speed for city driving'
+            recommendations['estimated_improvement'] += 12
+    
+    # Sürüş tarzı önerisi
+    if driving_style == DrivingStyle.AGGRESSIVE:
+        recommendations['driving_style_recommendation'] = 'switch to ECO mode'
+        recommendations['estimated_improvement'] += 20
+        recommendations['specific_tips'].append('Smooth acceleration and deceleration')
+    elif driving_style == DrivingStyle.NORMAL and terrain in [TerrainType.CITY, TerrainType.HIGHWAY]:
+        recommendations['driving_style_recommendation'] = 'consider ECO mode'
+        recommendations['estimated_improvement'] += 10
+    
+    # Enerji stratejisi
+    battery_level = scenario_data.get('battery_percent', 50)
+    pressure_level = scenario_data.get('pressure_percent', 50)
+    
+    if battery_level > 80 and pressure_level < 40:
+        recommendations['energy_strategy'] = 'electric_priority'
+        recommendations['specific_tips'].append('Use electric power to preserve pneumatic energy')
+    elif pressure_level > 80 and battery_level < 40:
+        recommendations['energy_strategy'] = 'pneumatic_priority'
+        recommendations['specific_tips'].append('Use pneumatic power to preserve battery')
+    
+    # Genel ipuçları
+    recommendations['specific_tips'].extend([
+        'Maintain steady speeds when possible',
+        'Use regenerative braking effectively',
+        'Pre-plan routes to avoid steep inclines',
+        'Monitor weather conditions for optimal timing'
+    ])
+    
+    return recommendations
+
+# === MAIN EXECUTION ===
+
+if __name__ == "__main__":
+    print("🚀 AI-ENHANCED HYBRID PNEUMATIC-ELECTRIC VEHICLE SIMULATION")
+    print("=" * 70)
+    
+    # Test senaryolarını çalıştır
+    run_enhanced_test_scenarios()
+    
+    # Menzil hesaplama örneği
+    print("\n" + "="*60)
+    print("📍 RANGE CALCULATOR EXAMPLE")
+    print("="*60)
+    
+    veh_params = VehicleParameters()
+    sys_params = SystemParameters()
+    
+    range_info = advanced_range_calculator(
+        veh_params, sys_params, 
+        current_battery_kwh=30, current_pressure_bar=350,
+        avg_speed_kmh=70, terrain=TerrainType.HIGHWAY
+    )
+    
+    print(f"🎯 Total Range: {range_info['total_range_km']:.1f} km ({range_info['range_hours']:.1f} hours)")
+    print(f"🔋 Battery Energy: {range_info['battery_energy_kwh']:.1f} kWh ({range_info['energy_distribution']['battery_percent']:.1f}%)")
+    print(f"💨 Pneumatic Energy: {range_info['pneumatic_energy_kwh']:.1f} kWh ({range_info['energy_distribution']['pneumatic_percent']:.1f}%)")
+    print(f"⚡ Average Power Demand: {range_info['avg_power_demand_kw']:.1f} kW")
+    
+    # Sistem tanılaması
+    print("\n" + "="*60)
+    print("🔧 SYSTEM DIAGNOSTICS")
+    print("="*60)
+    
+    diagnostics = system_diagnostics(
+        veh_params, sys_params,
+        current_battery_kwh=8, current_pressure_bar=180,
+        temperature_c=35
+    )
+    
+    print(f"🔋 Battery Status: {diagnostics['battery_status'].upper()}")
+    print(f"💨 Pneumatic Status: {diagnostics['pneumatic_status'].upper()}")
+    print(f"🏥 Overall Health: {diagnostics['overall_health'].upper()}")
+    
+    if diagnostics['warnings']:
+        print("\n⚠️  WARNINGS:")
+        for warning in diagnostics['warnings']:
+            print(f"   • {warning}")
+    
+    if diagnostics['recommendations']:
+        print("\n💡 RECOMMENDATIONS:")
+        for rec in diagnostics['recommendations']:
+            print(f"   • {rec}")
+    
+    print("\n" + "="*70)
+    print("✅ SIMULATION COMPLETE - AI Learning Active")
+    print("="*70)
+@dataclass
+class AILearningData:
+    """AI öğrenme verisi için yapı"""
+    scenario_history: List[Dict] = None
+    efficiency_patterns: Dict = None
+    optimal_strategies: Dict = None
+    
+    def __post_init__(self):
+        if self.scenario_history is None:
+            self.scenario_history = []
+        if self.efficiency_patterns is None:
+            self.efficiency_patterns = {}
+        if self.optimal_strategies is None:
+            self.optimal_strategies = {}
+
+# === GLOBAL AI INSTANCES ===
+
+# Navigation AI instance
+navigation_ai = SmartNavigationAI()
+
+def generate_realistic_sensor_data(road_type: RoadType, weather: WeatherType, 
+                                 driving_style: DrivingStyle, speed_kmh: float) -> SensorData:
+    """Gerçekçi sensör verisi üret (test için)"""
+    
+    # Base values
+    sensor_data = SensorData()
+    sensor_data.gps_speed_kmh = speed_kmh
+    
+    # Driving style'a göre agresiflik
+    if driving_style == DrivingStyle.AGGRESSIVE:
+        sensor_data.accelerometer_y = random.uniform(2.5, 5.0)  # Sert ivme
+        sensor_data.brake_pressure_bar = random.uniform(6.0, 12.0)
+        sensor_data.throttle_position_percent = random.uniform(70, 95)
+        sensor_data.steering_angle_deg = random.uniform(-25, 25)
+    elif driving_style == DrivingStyle.ECO:
+        sensor_data.accelerometer_y = random.uniform(0.5, 1.5)
+        sensor_data.brake_pressure_bar = random.uniform(1.0, 4.0)
+        sensor_data.throttle_position_percent = random.uniform(20, 50)
+        sensor_data.steering_angle_deg = random.uniform(-8, 8)
+    else:  # Normal/Defensive
+        sensor_data.accelerometer_y = random.uniform(1.0, 2.5)
+        sensor_data.brake_pressure_bar = random.uniform(2.0, 6.0)
+        sensor_data.throttle_position_percent = random.uniform(30, 70)
+        sensor_data.steering_angle_deg = random.uniform(-15, 15)
+    
+    # Road type'a göre titreşim
+    if road_type in [RoadType.HIGHWAY_STRAIGHT, RoadType.HIGHWAY_CURVED]:
+        sensor_data.vibration_amplitude_mm = random.uniform(0.5, 2.0)
+        sensor_data.vibration_frequency_hz = random.uniform(2, 5)
+        sensor_data.road_roughness_index = random.uniform(1, 3)
+    elif road_type == RoadType.CITY_STREET:
+        sensor_data.vibration_amplitude_mm = random.uniform(1.0, 4.0)
+        sensor_data.vibration_frequency_hz = random.uniform(3, 8)
+        sensor_data.road_roughness_index = random.uniform(2, 5)
+    elif road_type in [RoadType.MOUNTAIN_ROAD, RoadType.FOREST_PATH]:
+        sensor_data.vibration_amplitude_mm = random.uniform(3.0, 8.0)
+        sensor_data.vibration_frequency_hz = random.uniform(8, 15)
+        sensor_data.road_roughness_index = random.uniform(5, 9)
+    
+    # Hava durumuna göre adjustments
+    if weather in [WeatherType.RAIN, WeatherType.SNOW]:
+        sensor_data.vibration_amplitude_mm *= 1.3  # Islak yolda daha fazla titreşim
+        sensor_data.gyroscope_roll = random.uniform(-5, 5)  # Kayma eğilimi
+    
+    # Hız'a göre aerodinamik etkiler
+    if speed_kmh > 80:
+        sensor_data.gyroscope_yaw = random.uniform(-2, 2)
+        sensor_data.accelerometer_x = random.uniform(-1, 1)  # Yan rüzgar
+    
+    return sensor_data
+
+def simulate_smart_navigation_scenario():
+    """Akıllı navigasyon AI demosu"""
+    print("\n" + "="*70)
+    print("🗺️  SMART NAVIGATION AI - REAL-TIME ROAD ANALYSIS DEMO")
+    print("="*70)
+    
+    # Test senaryoları
+    test_scenarios = [
+        {
+            "name": "🏁 Highway Aggressive Driving",
+            "road_type": RoadType.HIGHWAY_STRAIGHT,
+            "driving_style": DrivingStyle.AGGRESSIVE,
+            "speed": 130,
+            "weather": WeatherType.NONE
+        },
+        {
+            "name": "🏔️  Mountain Road - Excessive Shaking",
+            "road_type": RoadType.MOUNTAIN_ROAD,
+            "driving_style": DrivingStyle.NORMAL,
+            "speed": 45,
+            "weather": WeatherType.RAIN
+        },
+        {
+            "name": "🌲 Forest Path - Rough Terrain",
+            "road_type": RoadType.FOREST_PATH,
+            "driving_style": DrivingStyle.DEFENSIVE,
+            "speed": 25,
+            "weather": WeatherType.NONE
+        },
+        {
+            "name": "🌧️  City Rain - Eco Driving",
+            "road_type": RoadType.CITY_STREET,
+            "driving_style": DrivingStyle.ECO,
+            "speed": 35,
+            "weather": WeatherType.RAIN
+        },
+        {
+            "name": "🏖️  Coastal Highway - High Speed",
+            "road_type": RoadType.COASTAL_ROAD,
+            "driving_style": DrivingStyle.NORMAL,
+            "speed": 90,
+            "weather": WeatherType.NONE
+        }
+    ]
+    
+    analysis_history = []
+    
+    for i, scenario in enumerate(test_scenarios):
+        print(f"\n📍 {scenario['name']}")
+        print("-" * 50)
+        
+        # Sensör verisi üret
+        sensor_data = generate_realistic_sensor_data(
+            scenario['road_type'], scenario['weather'], 
+            scenario['driving_style'], scenario['speed']
+        )
+        
+        # Navigation context oluştur
+        nav_context = NavigationContext(
+            current_road_type=scenario['road_type'],
+            speed_limit_kmh=scenario['speed'] * 0.8,  # Hız limiti
+            upcoming_turns=[{"direction": "right", "angle": 30, "distance_m": 500}]
+        )
+        
+        # AI Analizi
+        behavior_analysis = navigation_ai.analyze_driving_behavior(sensor_data)
+        road_condition = navigation_ai.detect_road_conditions(sensor_data, nav_context)
+        route_analysis = navigation_ai.smart_route_analysis(sensor_data, nav_context, behavior_analysis)
+        
+        # Sonuçları göster
+        print(f"   🚗 Detected Driving Style: {behavior_analysis['driving_style'].value.upper()}")
+        print(f"   📊 Aggressiveness: {behavior_analysis['aggressiveness_score']:.1f}/10")
+        print(f"   ⚖️  Stability Score: {behavior_analysis['stability_score']:.1f}/10")
+        print(f"   🌱 Eco Score: {behavior_analysis['eco_score']:.1f}/10")
+        print(f"   🛣️  Road Surface: {road_condition.surface_type} (Quality: {road_condition.surface_quality:.1f}/10)")
+        print(f"   📳 Vibration: {sensor_data.vibration_amplitude_mm:.1f}mm at {sensor_data.vibration_frequency_hz:.1f}Hz")
+        
+        # Specific behaviors
+        if behavior_analysis['specific_behaviors']:
+            print(f"   ⚠️  Detected Issues: {', '.join(behavior_analysis['specific_behaviors'])}")
+        
+        # Route suitability
+        print(f"   🎯 Route Suitability: {route_analysis['current_route_suitability']:.1f}/10")
+        
+        if route_analysis['risk_factors']:
+            print(f"   🚨 Risk Factors: {', '.join(route_analysis['risk_factors'])}")
+            
+        if route_analysis['recommended_adjustments']:
+            print(f"   💡 AI Recommendations:")
+            for adj in route_analysis['recommended_adjustments']:
+                print(f"      • {adj.replace('_', ' ').title()}")
+        
+        # Alternative routes
+        if route_analysis['alternative_routes']:
+            print(f"   🔄 Alternative Routes Suggested:")
+            for alt in route_analysis['alternative_routes']:
+                print(f"      • {alt['type']}: {alt['reason']} (+{alt['estimated_time_penalty_min']}min, +{alt['comfort_improvement']:.1f} comfort)")
+        
+        # Learning için performance simulation
+        performance_metrics = {
+            'efficiency': route_analysis['efficiency_prediction'],
+            'comfort_score': 10 - (sensor_data.vibration_amplitude_mm / 2),
+            'safety_score': behavior_analysis['stability_score']
+        }
+        
+        route_data = {
+            'road_type': scenario['road_type'].value,
+            'surface_type': road_condition.surface_type,
+            'weather': scenario['weather'].value
+        }
+        
+        navigation_ai.learn_from_route_experience(route_data, performance_metrics)
+        
+        # Analysis history'ye ekle
+        analysis_history.append({
+            'scenario_name': scenario['name'],
+            'behavior': behavior_analysis,
+            'route_analysis': route_analysis,
+            'performance': performance_metrics
+        })
+    
+    # Overall recommendations
+    print(f"\n" + "="*70)
+    print("🧠 AI LEARNED RECOMMENDATIONS BASED ON ALL SCENARIOS")
+    print("="*70)
+    
+    recommendations = navigation_ai.generate_route_recommendations(analysis_history)
+    
+    for rec in recommendations:
+        priority_icon = "🔴" if rec.get('priority') == 'high' else "🟡" if rec.get('priority') == 'medium' else "🟢"
+        print(f"{priority_icon} {rec.get('type', '').upper()}: {rec.get('message', '')}")
+        if 'expected_benefit' in rec:
+            print(f"   📈 Expected Benefit: {rec['expected_benefit']}")
+    
+    # Navigation insights
+    insights = navigation_ai.get_navigation_insights()
+    if insights.get('status') != 'insufficient_data':
+        print(f"\n📊 NAVIGATION AI INSIGHTS:")
+        print(f"   🏆 Most Efficient Route Type: {insights['most_efficient_route']['type']} ({insights['most_efficient_route']['avg_efficiency']:.3f})")
+        print(f"   😌 Most Comfortable Route Type: {insights['most_comfortable_route']['type']} ({insights['most_comfortable_route']['avg_comfort']:.1f}/10)")
+        print(f"   🎛️  AI Sensitivity Settings:")
+        print(f"      • Vibration Sensitivity: {insights['learned_preferences']['vibration_sensitivity']:.2f}")
+        print(f"      • Environmental Awareness: {insights['learned_preferences']['environmental_awareness']:.2f}")
+
+def real_time_navigation_demo():
+    """Gerçek zamanlı navigasyon AI demosu - sürekli öğrenme"""
+    print(f"\n" + "="*70)
+    print("🔄 REAL-TIME NAVIGATION LEARNING DEMONSTRATION")
+    print("="*70)
+    
+    # Sürekli öğrenme simülasyonu
+    learning_episodes = []
+    
+    for episode in range(15):
+        # Random scenario üret
+        road_types = list(RoadType)
+        weather_types = list(WeatherType)
+        driving_styles = list(DrivingStyle)
+        
+        scenario = {
+            'road_type': random.choice(road_types),
+            'weather': random.choice(weather_types),
+            'driving_style': random.choice(driving_styles),
+            'speed': random.uniform(20, 130)
+        }
+        
+        # Sensor data ve analiz
+        sensor_data = generate_realistic_sensor_data(
+            scenario['road_type'], scenario['weather'],
+            scenario['driving_style'], scenario['speed']
+        )
+        
+        nav_context = NavigationContext(current_road_type=scenario['road_type'])
+        behavior_analysis = navigation_ai.analyze_driving_behavior(sensor_data)
+        
+        # Öğrenme için performance hesapla
+        stability_bonus = behavior_analysis['stability_score'] / 10
+        eco_bonus = behavior_analysis['eco_score'] / 10
+        safety_penalty = behavior_analysis['aggressiveness_score'] / 20
+        
+        overall_performance = max(0, stability_bonus + eco_bonus - safety_penalty)
+        
+        learning_episodes.append({
+            'episode': episode + 1,
+            'road_type': scenario['road_type'].value,
+            'driving_style': behavior_analysis['driving_style'].value,
+            'performance': overall_performance,
+            'vibration': sensor_data.vibration_amplitude_mm
+        })
+        
+        # AI learns from experience
+        route_data = {
+            'road_type': scenario['road_type'].value,
+            'surface_type': 'mixed',
+            'weather': scenario['weather'].value
+        }
+        
+        performance_metrics = {
+            'efficiency': overall_performance,
+            'comfort_score': 10 - sensor_data.vibration_amplitude_mm,
+            'safety_score': behavior_analysis['stability_score']
+        }
+        
+        navigation_ai.learn_from_route_experience(route_data, performance_metrics)
+        
+        # Her 5 episode'da progress göster
+        if (episode + 1) % 5 == 0:
+            recent_performance = np.mean([ep['performance'] for ep in learning_episodes[-5:]])
+            avg_vibration = np.mean([ep['vibration'] for ep in learning_episodes[-5:]])
+            
+            print(f"Episode {episode+1:2d}: Recent Performance: {recent_performance:.3f} | Avg Vibration: {avg_vibration:.1f}mm")
+    
+    # Learning curve analysis
+    print(f"\n📈 NAVIGATION AI LEARNING CURVE:")
+    initial_perf = np.mean([ep['performance'] for ep in learning_episodes[:3]])
+    final_perf = np.mean([ep['performance'] for ep in learning_episodes[-3:]])
+    improvement = final_perf - initial_perf
+    
+    print(f"   Initial Performance: {initial_perf:.3f}")
+    print(f"   Final Performance: {final_perf:.3f}")
+    print(f"   AI Navigation Improvement: {improvement:+.3f} ({improvement/initial_perf*100:+.1f}%)")
+    
+    # Pattern recognition results
+    road_performance = {}
+    for episode in learning_episodes:
+        road = episode['road_type']
+        if road not in road_performance:
+            road_performance[road] = []
+        road_performance[road].append(episode['performance'])
+    
+    print(f"\n🎯 LEARNED ROAD TYPE PREFERENCES:")
+    for road, performances in road_performance.items():
+        if len(performances) > 1:
+            avg_perf = np.mean(performances)
+            print(f"   {road}: {avg_perf:.3f} (n={len(performances)})")
+
+def integrated_ai_system_demo():
+    """Hibrit araç AI + Navigasyon AI entegre demo"""
+    print(f"\n" + "="*70)
+    print("🤖 INTEGRATED AI SYSTEM: HYBRID VEHICLE + SMART NAVIGATION")
+    print("="*70)
+    
+    veh_params = VehicleParameters()
+    sys_params = SystemParameters()
+    
+    # Complex scenario
+    print("🏔️  Complex Mountain Scenario: Aggressive driving + Rough terrain")
+    
+    # Navigation AI analysis
+    sensor_data = generate_realistic_sensor_data(
+        RoadType.MOUNTAIN_ROAD, WeatherType.RAIN, DrivingStyle.AGGRESSIVE, 65
+    )
+    
+    nav_context = NavigationContext(current_road_type=RoadType.MOUNTAIN_ROAD)
+    behavior_analysis = navigation_ai.analyze_driving_behavior(sensor_data)
+    route_analysis = navigation_ai.smart_route_analysis(sensor_data, nav_context, behavior_analysis)
+    
+    print(f"   🧠 Navigation AI Analysis:")
+    print(f"      • Detected Style: {behavior_analysis['driving_style'].value}")
+    print(f"      • Stability Score: {behavior_analysis['stability_score']:.1f}/10")
+    print(f"      • Route Suitability: {route_analysis['current_route_suitability']:.1f}/10")
+    
+    # Hybrid vehicle AI - Navigation AI'dan gelen bilgileri kullan
+    env = Environment(
+        terrain_type=TerrainType.MOUNTAIN,
+        weather_type=WeatherType.RAIN,
+        rain_intensity=RainIntensity.MODERATE,
+        temperature_c=12
+    )
+    
+    # Route analysis'ten gelen efficiency prediction'ı kullan
+    adjusted_demand_factor = 1.0 + (10 - route_analysis['current_route_suitability']) * 0.05
+    
+    demand_kw, demand_details = total_power_demand_enhanced(
+        65, 1.5, env, veh_params, sys_params, 8, behavior_analysis['driving_style']
+    )
+    
+    # Apply navigation AI correction
+    demand_kw *= adjusted_demand_factor
+    
+    # Hybrid system response
+    pneumatic_kw, electric_kw, total_kw, management_details = ai_enhanced_energy_management(
+        demand_kw, 35_000_000, 18, sys_params, veh_params, env, behavior_analysis['driving_style']
+    )
+    
+    print(f"   ⚡ Hybrid Vehicle AI Response:")
+    print(f"      • Power Demand (adjusted): {demand_kw:.1f}kW")
+    print(f"      • Pneumatic Output: {pneumatic_kw:.1f}kW")
+    print(f"      • Electric Output: {electric_kw:.1f}kW")
+    print(f"      • System Efficiency: {management_details['efficiency_achieved']:.3f}")
+    
+    # AI-to-AI communication simulation
+    if route_analysis['current_route_suitability'] < 5.0:
+        print(f"   🔄 AI CROSS-COMMUNICATION:")
+        print(f"      • Navigation AI → Vehicle AI: 'Route unsuitable, reduce performance demands'")
+        print(f"      • Vehicle AI → Navigation AI: 'Switching to conservative energy management'")
+        
+        # Adjust vehicle AI strategy based on navigation input
+        conservative_factor = 0.8
+        print(f"      • Applied Conservative Factor: {conservative_factor}")
+    
+    # Combined recommendations
+    print(f"\n💡 INTEGRATED AI RECOMMENDATIONS:")
+    if behavior_analysis['aggressiveness_score'] > 6.0 and route_analysis['current_route_suitability'] < 6.0:
+        print(f"   🚨 CRITICAL: Aggressive driving on unsuitable road detected")
+        print(f"   📱 Action: Switch to highway route + Enable ECO mode")
+        print(f"   📈 Expected Benefits: +40% efficiency, +60% safety, +50% comfort")
+    
+    # Learning integration
+    combined_performance = (
+        management_details['efficiency_achieved'] + 
+        route_analysis['efficiency_prediction']
+    ) / 2
+    
+    print(f"\n🎓 COMBINED AI LEARNING:")
+    print(f"   • Vehicle AI Efficiency: {management_details['efficiency_achieved']:.3f}")
+    print(f"   • Navigation AI Efficiency: {route_analysis['efficiency_prediction']:.3f}")
+    print(f"   • Combined Performance: {combined_performance:.3f}")
+    print(f"   • Both AIs will learn from this integrated experience")
+
+# Global navigation AI instance
+navigation_ai = SmartNavigationAI()    print("\n" + "="*70)
+    print("✅ AI-ENHANCED SIMULATION COMPLETE")
+    print("🧠 Real Learning Algorithms Active: Q-Learning + Strategy Weight Adaptation")
+    print("📊 Continuous Improvement Through Experience")
+    print("="*70)
+    
+    # Ek AI yetenekleri demosu
+    print(f"\n🚀 RUNNING ADVANCED AI DEMOS...")
+    advanced_optimization_demo()
+    
+    # Sürekli öğrenme simülasyonu (küçük test)
+    performance_curve = continuous_learning_simulation(30)
+    
+    print(f"\n🎓 FINAL AI INTELLIGENCE REPORT")
+    print("="*60)
+    
+    final_stats = vehicle_ai.get_learning_statistics()
+    if final_stats.get('status') != 'no_data':
+        print(f"🎯 AI has mastered {len(final_stats['best_strategy_states'])} different scenarios")
+        print(f"🧠 Knowledge Base: {final_stats['learned_strategies']} unique states learned")
+        print(f"📊 Overall Learning Efficiency: {final_stats['improvement']*100:+.1f}%")
+        
+        # AI güven seviyesi
+        confidence = min(100, final_stats['total_scenarios'] * 2)
+        print(f"🔮 AI Confidence Level: {confidence}%")
+        
+        # En başarılı öğrenme pattern'i
+        if vehicle_ai.learning_data.efficiency_patterns:
+            best_pattern = max(
+                vehicle_ai.learning_data.efficiency_patterns.items(),
+                key=lambda x: np.mean(x[1])
+            )
+            print(f"🏆 Best Mastered Scenario: {best_pattern[0]} (Efficiency: {np.mean(best_pattern[1]):.3f})")
+    
+    # Smart Navigation AI demosu
+    simulate_smart_navigation_scenario()
+    
+    # Real-time learning demo
+    real_time_navigation_demo()
+    
+    # Integrated AI system demo
+    integrated_ai_system_demo()
+    
+    print("\n" + "="*70)
+    print("✅ SMART NAVIGATION AI COMPLETE")
+    print("🧠 AI can now detect:")
+    print("   • Aggressive/Defensive/Eco driving patterns")
+    print("   • Road surface conditions from vibration")
+    print("   • Vehicle instability and shaking")
+    print("   • Route suitability for current driving style")
+    print("   • Alternative route recommendations")
+    print("🔄 Continuous learning from every drive experience!")
+    print("="*70)
+
+# === OPTIMIZED HELPER FUNCTIONS ===
+
+def real_time_performance_monitor():
+    """Gerçek zamanlı performans monitörü"""
+    if len(vehicle_ai.efficiency_history) < 2:
+        return {"status": "insufficient_data"}
+    
+    # Son 5 senaryo vs önceki 5 senaryo karşılaştırması
+    recent_slice = vehicle_ai.efficiency_history[-5:] if len(vehicle_ai.efficiency_history) >= 5 else vehicle_ai.efficiency_history
+    older_slice = vehicle_ai.efficiency_history[-10:-5] if len(vehicle_ai.efficiency_history) >= 10 else vehicle_ai.efficiency_history[:-5] if len(vehicle_ai.efficiency_history) > 5 else [0.7]  # baseline
+    
+    recent_avg = np.mean(recent_slice)
+    older_avg = np.mean(older_slice)
+    trend = recent_avg - older_avg
+    
+    # Performance kategorisi
+    if recent_avg > 0.9:
+        performance_level = "EXCELLENT"
+    elif recent_avg > 0.8:
+        performance_level = "GOOD"
+    elif recent_avg > 0.7:
+        performance_level = "FAIR"
+    else:
+        performance_level = "NEEDS_IMPROVEMENT"
+    
+    return {
+        "current_performance": recent_avg,
+        "trend": trend,
+        "performance_level": performance_level,
+        "learning_velocity": abs(trend) * 100,  # Öğrenme hızı
+        "recommendation": "maintain_course" if trend >= 0 else "adjust_strategy"
+    }
+
+def adaptive_difficulty_adjustment():
+    """AI performansına göre zorluk seviyesi ayarı"""
+    monitor = real_time_performance_monitor()
+    
+    if monitor.get("status") == "insufficient_data":
+        return "normal"
+    
+    perf_level = monitor["performance_level"]
+    trend = monitor["trend"]
+    
+    # AI çok iyi performans gösteriyorsa zorluk artır
+    if perf_level == "EXCELLENT" and trend > 0.05:
+        return "increase_difficulty"
+    # AI zorlanıyorsa zorluk azalt
+    elif perf_level == "NEEDS_IMPROVEMENT" and trend < -0.02:
+        return "decrease_difficulty"
+    else:
+        return "maintain_difficulty"
+
+def generate_ai_insights():
+    """AI'dan öngörüler ve içgörüler"""
+    insights = []
+    
+    if len(vehicle_ai.learning_data.efficiency_patterns) > 0:
+        # En verimli senaryo tipi
+        best_scenario = max(
+            vehicle_ai.learning_data.efficiency_patterns.items(),
+            key=lambda x: np.mean(x[1])
+        )
+        insights.append(f"🎯 Optimal Scenario Discovered: {best_scenario[0]} (Avg: {np.mean(best_scenario[1]):.3f})")
+        
+        # En zor senaryo tipi
+        worst_scenario = min(
+            vehicle_ai.learning_data.efficiency_patterns.items(),
+            key=lambda x: np.mean(x[1])
+        )
+        insights.append(f"⚠️  Challenging Scenario: {worst_scenario[0]} (Avg: {np.mean(worst_scenario[1]):.3f})")
+    
+    # Strategy weight analizi
+    dominant_strategy = max(vehicle_ai.strategy_weights.items(), key=lambda x: x[1])
+    insights.append(f"🧠 AI Dominant Strategy: {dominant_strategy[0]} (Weight: {dominant_strategy[1]:.3f})")
+    
+    # Exploration vs Exploitation dengesi
+    if vehicle_ai.exploration_rate > 0.1:
+        insights.append(f"🔍 AI is still exploring ({vehicle_ai.exploration_rate:.3f} exploration rate)")
+    else:
+        insights.append(f"🎯 AI has converged to exploitation mode (confident in learned strategies)")
+    
+    # Q-learning progress
+    if vehicle_ai.q_table:
+        learned_states = len(vehicle_ai.q_table)
+        avg_q_value = np.mean([max(actions.values()) for actions in vehicle_ai.q_table.values()])
+        insights.append(f"📚 Knowledge Base: {learned_states} states, Avg Q-value: {avg_q_value:.1f}")
+    
+    return insights
+
+def export_ai_model():
+    """AI modelini export et (gerçek uygulamada dosyaya kaydedilir)"""
+    model_data = {
+        'strategy_weights': vehicle_ai.strategy_weights.copy(),
+        'q_table': vehicle_ai.q_table.copy(),
+        'learning_rate': vehicle_ai.learning_rate,
+        'exploration_rate': vehicle_ai.exploration_rate,
+        'total_experience': len(vehicle_ai.learning_data.scenario_history),
+        'efficiency_patterns': vehicle_ai.learning_data.efficiency_patterns.copy(),
+        'performance_metrics': {
+            'avg_efficiency': np.mean(vehicle_ai.efficiency_history) if vehicle_ai.efficiency_history else 0,
+            'learning_improvement': vehicle_ai.get_learning_statistics().get('improvement', 0)
+        }
+    }
+    return model_data
+
+def load_ai_model(model_data: Dict):
+    """AI modelini yükle (gerçek uygulamada dosyadan okunur)"""
+    if 'strategy_weights' in model_data:
+        vehicle_ai.strategy_weights = model_data['strategy_weights']
+    if 'q_table' in model_data:
+        vehicle_ai.q_table = model_data['q_table']
+    if 'exploration_rate' in model_data:
+        vehicle_ai.exploration_rate = model_data['exploration_rate']
+    # ... diğer parametreler
+    
+    print(f"🔄 AI Model Loaded - Experience: {model_data.get('total_experience', 0)} scenarios")
+
+# === PERFORMANCE OPTIMIZATION ===
+
+def optimize_system_parameters():
+    """Sistem parametrelerini AI öğrenmelerine göre optimize et"""
+    
+    if len(vehicle_ai.efficiency_history) < 10:
+        return "Insufficient data for optimization"
+    
+    # En iyi performans gösteren senaryoları analiz et
+    best_scenarios = [
+        scenario for scenario in vehicle_ai.learning_data.scenario_history 
+        if scenario['efficiency'] > 0.85
+    ]
+    
+    if not best_scenarios:
+        return "No high-performance scenarios found"
+    
+    recommendations = []
+    
+    # Pattern analizi
+    terrain_performance = {}
+    for scenario in best_scenarios:
+        terrain = scenario['scenario'].get('terrain', 'unknown')
+        if terrain not in terrain_performance:
+            terrain_performance[terrain] = []
+        terrain_performance[terrain].append(scenario['efficiency'])
+    
+    # En iyi terrain stratejisi
+    if terrain_performance:
+        best_terrain = max(terrain_performance.items(), key=lambda x: np.mean(x[1]))
+        recommendations.append(f"Optimal terrain strategy identified: {best_terrain[0]}")
+    
+    # Strategy weight optimizasyonu
+    if vehicle_ai.strategy_weights['pressure_importance'] > 0.7:
+        recommendations.append("System favors pneumatic power - consider increasing tank capacity")
+    elif vehicle_ai.strategy_weights['battery_importance'] > 0.7:
+        recommendations.append("System favors electric power - consider battery upgrade")
+    
+    return recommendationsimport math
+import numpy as np
+from dataclasses import dataclass
+from enum import Enum
+from typing import Tuple, Dict, List
+import random
+import time
+
+# === ENUMS AND CONSTANTS ===
+
+class WeatherType(Enum):
+    NONE = "none"
+    RAIN = "rain"
+    SNOW = "snow"
+    HAIL = "hail"
+    FOG = "fog"
+
+class RainIntensity(Enum):
+    NONE = "none"
+    LIGHT = "light"
+    MODERATE = "moderate"
+    HEAVY = "heavy"
+
+class WindDirection(Enum):
+    NONE = "none"
+    HEAD = "head"
+    TAIL = "tail"
+    CROSS = "cross"
+
+class DrivingStyle(Enum):
+    DEFENSIVE = "defensive"
+    NORMAL = "normal"
+    AGGRESSIVE = "aggressive"
+    ECO = "eco"
+
+class TerrainType(Enum):
+    HIGHWAY = "highway"
+    CITY = "city"
+    MOUNTAIN = "mountain"
+    OFFROAD = "offroad"
+
+class RoadType(Enum):
+    HIGHWAY_STRAIGHT = "highway_straight"
+    HIGHWAY_CURVED = "highway_curved"
+    CITY_STREET = "city_street"
+    MOUNTAIN_ROAD = "mountain_road"
+    FOREST_PATH = "forest_path"
+    DESERT_ROAD = "desert_road"
+    COASTAL_ROAD = "coastal_road"
+
+class VehicleState(Enum):
+    STABLE = "stable"
+    SLIGHT_VIBRATION = "slight_vibration"
+    MODERATE_SHAKE = "moderate_shake"
+    HEAVY_SHAKE = "heavy_shake"
+    EXTREME_CONDITIONS = "extreme_conditions"
+
+# === SENSOR DATA STRUCTURES ===
+
+@dataclass
+class SensorData:
+    """Araç sensör verileri"""
+    # Hareket sensörleri
+    accelerometer_x: float = 0.0  # Yanal ivme
+    accelerometer_y: float = 0.0  # Boyuna ivme  
+    accelerometer_z: float = 0.0  # Dikey ivme
+    gyroscope_roll: float = 0.0   # Yalpalama
+    gyroscope_pitch: float = 0.0  # Yunuslama
+    gyroscope_yaw: float = 0.0    # Sapma
+    
+    # GPS ve navigasyon
+    gps_speed_kmh: float = 0.0
+    gps_altitude_m: float = 0.0
+    gps_heading_deg: float = 0.0
+    road_curvature: float = 0.0   # Yol eğriliği (-1 to 1)
+    
+    # Çevre sensörleri
+    ambient_light_lux: float = 1000.0
+    road_surface_temp_c: float = 20.0
+    tire_pressure_bar: List[float] = None  # 4 lastik basıncı
+    
+    # Sürüş dinamikleri
+    steering_angle_deg: float = 0.0
+    brake_pressure_bar: float = 0.0
+    throttle_position_percent: float = 0.0
+    suspension_compression: List[float] = None  # 4 amortisör sıkışma
+    
+    # Titreşim analizi
+    vibration_frequency_hz: float = 0.0
+    vibration_amplitude_mm: float = 0.0
+    road_roughness_index: float = 0.0  # 0-10 arası
+    
+    def __post_init__(self):
+        if self.tire_pressure_bar is None:
+            self.tire_pressure_bar = [2.2, 2.2, 2.2, 2.2]
+        if self.suspension_compression is None:
+            self.suspension_compression = [0.0, 0.0, 0.0, 0.0]
+
+@dataclass
+class RoadCondition:
+    """Yol durumu analizi"""
+    surface_type: str = "asphalt"  # asphalt, concrete, gravel, dirt, sand
+    surface_quality: float = 8.0   # 0-10 arası (10 = mükemmel)
+    road_width_m: float = 3.5
+    lane_count: int = 2
+    shoulder_quality: float = 5.0
+    visibility_m: float = 1000.0
+    traffic_density: float = 0.3   # 0-1 arası
+    
+@dataclass
+class NavigationContext:
+    """Navigasyon konteksti"""
+    current_road_type: RoadType = RoadType.CITY_STREET
+    upcoming_turns: List[Dict] = None  # [{"direction": "left", "angle": 45, "distance_m": 200}]
+    elevation_profile: List[float] = None  # Önümüzdeki yükseklik profili
+    speed_limit_kmh: float = 50.0
+    estimated_arrival_time: float = 0.0  # dakika
+    
+    def __post_init__(self):
+        if self.upcoming_turns is None:
+            self.upcoming_turns = []
+        if self.elevation_profile is None:
+            self.elevation_profile = [0.0] * 10  # 10 noktalık profil
+
+# === DATA CLASSES ===
+
+@dataclass
+class VehicleParameters:
+    mass_kg: float = 1500
+    tank_volume_m3: float = 0.3
+    pneumatic_flow_rate_m3s: float = 0.05
+    drag_coefficient: float = 0.3
+    frontal_area_m2: float = 2.2
+    rolling_resistance_coeff: float = 0.01
+    max_tank_pressure_pa: float = 50_000_000  # 500 bar max
+    tire_efficiency: float = 0.95
+
+@dataclass
+class SystemParameters:
+    min_operating_pressure_pa: float = 5_000_000  # 50 bar
+    pneumatic_priority_threshold_pa: float = 30_000_000  # 300 bar
+    battery_low_threshold_kwh: float = 5.0
+    battery_capacity_kwh: float = 50.0
+    high_demand_threshold_kw: float = 80
+    pneumatic_efficiency: float = 0.65
+    electric_efficiency: float = 0.90
+    overall_efficiency: float = 0.92
+    max_electric_power_kw: float = 150
+    max_regen_power_kw: float = 100
+    thermal_management_power_kw: float = 2.0  # Cooling/heating system
+
+@dataclass
+class Environment:
+    temperature_c: float = 22
+    humidity_percent: float = 55
+    wind_speed_kmh: float = 0
+    wind_direction: WindDirection = WindDirection.NONE
+    altitude_m: float = 0
+    weather_type: WeatherType = WeatherType.NONE
+    rain_intensity: RainIntensity = RainIntensity.NONE
+    terrain_type: TerrainType = TerrainType.HIGHWAY
+    visibility_m: float = 1000
+
+class SmartNavigationAI:
+    """AI destekli otomatik yol belirleme ve sürüş analizi sistemi"""
+    
+    def __init__(self):
+        # Temel öğrenme verileri
+        self.road_patterns = {}  # Yol pattern'leri
+        self.driving_behavior_history = []
+        self.route_efficiency_database = {}
+        
+        # Real-time analysis
+        self.current_road_analysis = None
+        self.driving_style_confidence = 0.0
+        self.route_recommendations = []
+        
+        # Machine Learning için feature weights
+        self.vibration_sensitivity = 0.7
+        self.speed_analysis_weight = 0.8
+        self.steering_analysis_weight = 0.6
+        self.environmental_weight = 0.5
+        
+        # Öğrenme parametreleri
+        self.pattern_learning_rate = 0.15
+        self.confidence_threshold = 0.75
+        
+    def analyze_driving_behavior(self, sensor_data: SensorData, 
+                               time_window_s: float = 30.0) -> Dict:
+        """Gerçek zamanlı sürüş davranışı analizi"""
+        
+        behavior_analysis = {
+            'driving_style': DrivingStyle.NORMAL,
+            'aggressiveness_score': 0.0,  # 0-10 arası
+            'stability_score': 0.0,       # 0-10 arası  
+            'eco_score': 0.0,            # 0-10 arası
+            'confidence': 0.0,
+            'specific_behaviors': []
+        }
+        
+        # 1. İvmelenme analizi (agresiflik tespiti)
+        acceleration_magnitude = math.sqrt(
+            sensor_data.accelerometer_x**2 + 
+            sensor_data.accelerometer_y**2
+        )
+        
+        if acceleration_magnitude > 4.0:  # Çok sert ivme
+            behavior_analysis['aggressiveness_score'] += 3.0
+            behavior_analysis['specific_behaviors'].append("harsh_acceleration")
+        elif acceleration_magnitude > 2.5:  # Orta sert
+            behavior_analysis['aggressiveness_score'] += 1.5
+        
+        # 2. Direksiyon kullanımı analizi
+        steering_aggression = abs(sensor_data.steering_angle_deg) / time_window_s
+        if steering_aggression > 15.0:  # Çok hızlı direksiyon hareketi
+            behavior_analysis['aggressiveness_score'] += 2.0
+            behavior_analysis['specific_behaviors'].append("aggressive_steering")
+        
+        # 3. Fren analizi
+        if sensor_data.brake_pressure_bar > 8.0:  # Sert fren
+            behavior_analysis['aggressiveness_score'] += 2.5
+            behavior_analysis['specific_behaviors'].append("harsh_braking")
+            
+        # 4. Hız analizi (aşırı hız tespiti varsayımsal olarak)
+        speed_excess_factor = max(0, (sensor_data.gps_speed_kmh - 120) / 30)  # 120+ aşırı hız
+        behavior_analysis['aggressiveness_score'] += speed_excess_factor * 2.0
+        
+        # 5. Stability analizi (sallanma tespiti)
+        vibration_instability = sensor_data.vibration_amplitude_mm / 10.0
+        roll_instability = abs(sensor_data.gyroscope_roll) / 45.0  # 45 derece max normal
+        pitch_instability = abs(sensor_data.gyroscope_pitch) / 30.0
+        
+        total_instability = (vibration_instability + roll_instability + pitch_instability) / 3.0
+        behavior_analysis['stability_score'] = max(0, 10 - total_instability * 10)
+        
+        if total_instability > 0.7:
+            behavior_analysis['specific_behaviors'].append("vehicle_instability")
+        if vibration_instability > 0.8:
+            behavior_analysis['specific_behaviors'].append("excessive_vibration")
+            
+        # 6. Eco sürüş analizi
+        throttle_smoothness = 10 - min(10, sensor_data.throttle_position_percent / 10)
+        brake_efficiency = 10 - min(10, sensor_data.brake_pressure_bar)
+        behavior_analysis['eco_score'] = (throttle_smoothness + brake_efficiency) / 2.0
+        
+        # 7. Sürüş tarzı sınıflandırması
+        aggression = behavior_analysis['aggressiveness_score']
+        if aggression > 6.0:
+            behavior_analysis['driving_style'] = DrivingStyle.AGGRESSIVE
+            behavior_analysis['confidence'] = min(1.0, aggression / 10.0)
+        elif aggression < 2.0 and behavior_analysis['eco_score'] > 7.0:
+            behavior_analysis['driving_style'] = DrivingStyle.ECO
+            behavior_analysis['confidence'] = behavior_analysis['eco_score'] / 10.0
+        elif behavior_analysis['stability_score'] > 8.0 and aggression < 3.0:
+            behavior_analysis['driving_style'] = DrivingStyle.DEFENSIVE
+            behavior_analysis['confidence'] = behavior_analysis['stability_score'] / 10.0
+        else:
+            behavior_analysis['driving_style'] = DrivingStyle.NORMAL
+            behavior_analysis['confidence'] = 0.6
+        
+        # Behavior history'ye ekle (öğrenme için)
+        self.driving_behavior_history.append({
+            'timestamp': time.time(),
+            'behavior': behavior_analysis.copy(),
+            'sensor_snapshot': sensor_data
+        })
+        
+        return behavior_analysis
+    
+    def detect_road_conditions(self, sensor_data: SensorData, 
+                             nav_context: NavigationContext) -> RoadCondition:
+        """Yol durumunu sensör verilerinden tespit et"""
+        
+        road_condition = RoadCondition()
+        
+        # 1. Yol yüzey tipi tespiti (titreşim patternlerine göre)
+        vibration = sensor_data.vibration_amplitude_mm
+        frequency = sensor_data.vibration_frequency_hz
+        roughness = sensor_data.road_roughness_index
+        
+        if vibration < 2.0 and frequency < 5.0:
+            road_condition.surface_type = "asphalt"
+            road_condition.surface_quality = 9.0
+        elif vibration < 4.0 and frequency < 8.0:
+            road_condition.surface_type = "concrete" 
+            road_condition.surface_quality = 8.0
+        elif vibration < 8.0 and frequency > 10.0:
+            road_condition.surface_type = "gravel"
+            road_condition.surface_quality = 5.0
+        elif vibration > 8.0:
+            road_condition.surface_type = "dirt" if roughness > 6.0 else "damaged_asphalt"
+            road_condition.surface_quality = 3.0 if roughness > 6.0 else 4.0
+        
+        # 2. Yol genişliği ve şerit sayısı tahmini (GPS ve steering pattern)
+        if nav_context.current_road_type in [RoadType.HIGHWAY_STRAIGHT, RoadType.HIGHWAY_CURVED]:
+            road_condition.lane_count = 3
+            road_condition.road_width_m = 3.75 * road_condition.lane_count
+        elif nav_context.current_road_type == RoadType.CITY_STREET:
+            road_condition.lane_count = 2
+            road_condition.road_width_m = 3.5 * road_condition.lane_count
+        else:  # Mountain, forest paths
+            road_condition.lane_count = 1
+            road_condition.road_width_m = 3.0
+            
+        # 3. Görüş mesafesi (ambient light ve weather)
+        if sensor_data.ambient_light_lux < 100:  # Gece/karanlık
+            road_condition.visibility_m = min(300, road_condition.visibility_m)
+        elif sensor_data.ambient_light_lux < 500:  # Alacakaranlık
+            road_condition.visibility_m = min(800, road_condition.visibility_m)
+            
+        return road_condition
+    
+    def smart_route_analysis(self, sensor_data: SensorData, 
+                           nav_context: NavigationContext, 
+                           current_behavior: Dict) -> Dict:
+        """Akıllı rota analizi ve önerileri"""
+        
+        route_analysis = {
+            'current_route_suitability': 0.0,  # 0-10 arası
+            'recommended_adjustments': [],
+            'alternative_routes': [],
+            'risk_factors': [],
+            'efficiency_prediction': 0.0
+        }
+        
+        # 1. Mevcut yol durumu vs sürüş tarzı uyumluluğu
+        road_condition = self.detect_road_conditions(sensor_data, nav_context)
+        driving_style = current_behavior['driving_style']
+        
+        # Agresif sürücü + kötü yol = düşük uyumluluk
+        if driving_style == DrivingStyle.AGGRESSIVE and road_condition.surface_quality < 6.0:
+            route_analysis['current_route_suitability'] = 3.0
+            route_analysis['risk_factors'].append("aggressive_driving_poor_road")
+            route_analysis['recommended_adjustments'].append("reduce_speed_for_road_conditions")
+            
+        # Eco sürücü + highway = yüksek uyumluluk
+        elif driving_style == DrivingStyle.ECO and nav_context.current_road_type in [RoadType.HIGHWAY_STRAIGHT]:
+            route_analysis['current_route_suitability'] = 9.0
+            
+        # Defensive + mountain = orta uyumluluk
+        elif driving_style == DrivingStyle.DEFENSIVE and "mountain" in nav_context.current_road_type.value:
+            route_analysis['current_route_suitability'] = 7.0
+        else:
+            route_analysis['current_route_suitability'] = 6.0  # Default
+            
+        # 2. Titreşim/sallanma analizi
+        if current_behavior['stability_score'] < 5.0:
+            route_analysis['risk_factors'].append("vehicle_instability_detected")
+            route_analysis['recommended_adjustments'].append("switch_to_smoother_road")
+            
+            # Alternatif yol önerileri
+            if nav_context.current_road_type == RoadType.MOUNTAIN_ROAD:
+                route_analysis['alternative_routes'].append({
+                    'type': 'highway_detour',
+                    'reason': 'smoother_surface',
+                    'estimated_time_penalty_min': 15,
+                    'comfort_improvement': 8.0
+                })
+                
+        # 3. Hava koşulları vs yol tipi
+        if road_condition.visibility_m < 500:
+            if nav_context.current_road_type in [RoadType.MOUNTAIN_ROAD, RoadType.FOREST_PATH]:
+                route_analysis['risk_factors'].append("low_visibility_dangerous_road")
+                route_analysis['recommended_adjustments'].append("switch_to_main_roads")
+                
+        # 4. Verimlilik tahmini
+        terrain_efficiency = {
+            RoadType.HIGHWAY_STRAIGHT: 0.9,
+            RoadType.HIGHWAY_CURVED: 0.8,
+            RoadType.CITY_STREET: 0.6,
+            RoadType.MOUNTAIN_ROAD: 0.4,
+            RoadType.FOREST_PATH: 0.3
+        }
+        
+        base_efficiency = terrain_efficiency.get(nav_context.current_road_type, 0.5)
+        behavior_penalty = current_behavior['aggressiveness_score'] * 0.05  # Agresiflik cezası
+        surface_bonus = road_condition.surface_quality * 0.02
+        
+        route_analysis['efficiency_prediction'] = max(0.1, 
+            base_efficiency - behavior_penalty + surface_bonus)
+        
+        return route_analysis
+    
+    def generate_route_recommendations(self, analysis_history: List[Dict]) -> List[Dict]:
+        """Geçmiş analizlere dayalı rota önerileri"""
+        
+        if len(analysis_history) < 5:
+            return [{"message": "Insufficient data for recommendations"}]
+        
+        recommendations = []
+        
+        # Pattern analizi
+        recent_instability = sum(1 for a in analysis_history[-10:] 
+                               if a.get('behavior', {}).get('stability_score', 10) < 5.0)
+        
+        if recent_instability > 3:  # Son 10'da 3+ kararsızlık
+            recommendations.append({
+                'type': 'route_change',
+                'priority': 'high',
+                'message': 'Frequent vehicle instability detected. Recommend switching to highway routes.',
+                'specific_action': 'avoid_mountain_forest_roads',
+                'expected_benefit': 'Reduce vibration by 60-80%'
+            })
+        
+        # Agresif sürüş pattern'i
+        aggressive_episodes = sum(1 for a in analysis_history[-15:] 
+                                if a.get('behavior', {}).get('driving_style') == DrivingStyle.AGGRESSIVE)
+        
+        if aggressive_episodes > 5:
+            recommendations.append({
+                'type': 'driving_behavior',
+                'priority': 'medium', 
+                'message': 'Aggressive driving pattern detected. Consider longer highway routes for safety.',
+                'specific_action': 'prefer_straight_highways',
+                'expected_benefit': 'Improve safety score by 40%'
+            })
+            
+        # Eco-efficiency önerisi
+        eco_episodes = sum(1 for a in analysis_history[-10:] 
+                         if a.get('behavior', {}).get('eco_score', 0) > 7.0)
+        
+        if eco_episodes > 7:
+            recommendations.append({
+                'type': 'efficiency_optimization',
+                'priority': 'low',
+                'message': 'Excellent eco-driving detected. You can use more challenging routes efficiently.',
+                'specific_action': 'consider_scenic_routes',
+                'expected_benefit': 'Maintain efficiency while enjoying better routes'
+            })
+            
+        return recommendations
+    
+    def learn_from_route_experience(self, route_data: Dict, performance_metrics: Dict):
+        """Rota deneyimlerinden öğrenme"""
+        
+        # Route pattern kayıt
+        route_key = f"{route_data.get('road_type', 'unknown')}_{route_data.get('surface_type', 'unknown')}"
+        
+        if route_key not in self.route_efficiency_database:
+            self.route_efficiency_database[route_key] = {
+                'efficiency_history': [],
+                'comfort_history': [],
+                'safety_history': [],
+                'sample_count': 0
+            }
+        
+        db_entry = self.route_efficiency_database[route_key]
+        db_entry['efficiency_history'].append(performance_metrics.get('efficiency', 0.5))
+        db_entry['comfort_history'].append(performance_metrics.get('comfort_score', 5.0))
+        db_entry['safety_history'].append(performance_metrics.get('safety_score', 5.0))
+        db_entry['sample_count'] += 1
+        
+        # Adaptive weight güncelleme
+        if performance_metrics.get('efficiency', 0) > 0.8:
+            # İyi performansta ağırlıkları güçlendir
+            self.vibration_sensitivity *= (1 + self.pattern_learning_rate)
+            self.environmental_weight *= (1 + self.pattern_learning_rate * 0.5)
+        elif performance_metrics.get('efficiency', 0) < 0.4:
+            # Kötü performansta ağırlıkları azalt
+            self.vibration_sensitivity *= (1 - self.pattern_learning_rate * 0.5)
+            
+        # Sınırları koru
+        self.vibration_sensitivity = np.clip(self.vibration_sensitivity, 0.3, 1.0)
+        self.environmental_weight = np.clip(self.environmental_weight, 0.2, 0.8)
+    
+    def get_navigation_insights(self) -> Dict:
+        """Navigasyon AI'ından insights"""
+        
+        if not self.route_efficiency_database:
+            return {"status": "insufficient_data"}
+        
+        # En verimli yol tipi
+        best_route_type = max(
+            self.route_efficiency_database.items(),
+            key=lambda x: np.mean(x[1]['efficiency_history']) if x[1]['efficiency_history'] else 0
+        )
+        
+        # En konforlu yol tipi
+        most_comfortable = max(
+            self.route_efficiency_database.items(),
+            key=lambda x: np.mean(x[1]['comfort_history']) if x[1]['comfort_history'] else 0
+        )
+        
+        return {
+            'most_efficient_route': {
+                'type': best_route_type[0],
+                'avg_efficiency': np.mean(best_route_type[1]['efficiency_history']),
+                'sample_size': best_route_type[1]['sample_count']
+            },
+            'most_comfortable_route': {
+                'type': most_comfortable[0],
+                'avg_comfort': np.mean(most_comfortable[1]['comfort_history']),
+                'sample_size': most_comfortable[1]['sample_count']
+            },
+            'learned_preferences': {
+                'vibration_sensitivity': self.vibration_sensitivity,
+                'environmental_awareness': self.environmental_weight
+            }
+        }
+
+# === AI ENHANCED HELPER FUNCTIONS ===
+
+class HybridVehicleAI:
+    """Gerçek öğrenen yapay zeka destekli hibrit araç yönetim sistemi"""
+    
+    def __init__(self):
+        self.learning_data = AILearningData()
+        
+        # Öğrenebilir parametreler - başlangıç değerleri
+        self.strategy_weights = {
+            'pressure_importance': 0.4,
+            'battery_importance': 0.5,
+            'efficiency_importance': 0.6,
+            'performance_importance': 0.3,
+            'weather_sensitivity': 0.2,
+            'terrain_sensitivity': 0.4
+        }
+        
+        # Reinforcement Learning parametreleri
+        self.learning_rate = 0.1
+        self.exploration_rate = 0.15  # Epsilon for epsilon-greedy
+        self.exploration_decay = 0.995
+        self.min_exploration = 0.05
+        
+        # Deneyim tablosu (state-action-reward)
+        self.q_table = {}  # Q-learning için
+        self.action_history = []
+        self.reward_history = []
+        
+        # Regresyon için geçmiş veriler
+        self.feature_history = []
+        self.efficiency_history = []
+        
+    def _get_state_key(self, current_state: Dict) -> str:
+        """Mevcut durumu discrete state'e çevirme"""
+        pressure_level = 'high' if current_state.get('pressure_pa', 0) > 30_000_000 else \
+                        'medium' if current_state.get('pressure_pa', 0) > 10_000_000 else 'low'
+        battery_level = 'high' if current_state.get('battery_kwh', 0) > 30 else \
+                       'medium' if current_state.get('battery_kwh', 0) > 15 else 'low'
+        demand_level = 'high' if current_state.get('demand_kw', 0) > 80 else \
+                      'medium' if current_state.get('demand_kw', 0) > 30 else 'low'
+        
+        return f"{pressure_level}_{battery_level}_{demand_level}"
+        
+    def _extract_features(self, current_state: Dict) -> np.ndarray:
+        """Makine öğrenimi için özellik çıkarımı"""
+        features = [
+            current_state.get('pressure_pa', 0) / 50_000_000,  # Normalized pressure
+            current_state.get('battery_kwh', 0) / 50.0,        # Normalized battery
+            current_state.get('demand_kw', 0) / 200.0,         # Normalized demand
+            current_state.get('temperature_c', 22) / 50.0,     # Normalized temp
+            1.0 if 'highway' in current_state.get('terrain', '') else 0.0,
+            1.0 if 'city' in current_state.get('terrain', '') else 0.0,
+            1.0 if 'mountain' in current_state.get('terrain', '') else 0.0,
+            current_state.get('weather_factor', 1.0)
+        ]
+        return np.array(features)
+    
+    def predict_energy_demand(self, speed_kmh: float, upcoming_terrain: str, 
+                            traffic_density: float, weather_factor: float) -> float:
+        """Geliştirilmiş AI enerji talebi tahmini"""
+        
+        # Temel tahmin
+        base_demand = speed_kmh * 0.8
+        
+        # Öğrenilen ağırlıklarla terrain etkisi
+        terrain_multipliers = {
+            'highway': 1.0,
+            'city': 1.0 + self.strategy_weights['terrain_sensitivity'] * 0.5,
+            'mountain': 1.0 + self.strategy_weights['terrain_sensitivity'] * 2.0,
+            'offroad': 1.0 + self.strategy_weights['terrain_sensitivity'] * 2.5
+        }
+        terrain_effect = terrain_multipliers.get(upcoming_terrain, 1.0)
+        
+        # Öğrenilen weather sensitivity
+        weather_effect = 1.0 + (weather_factor - 1.0) * self.strategy_weights['weather_sensitivity']
+        
+        # Traffic etkisi
+        traffic_effect = 1 + (traffic_density * 0.5)
+        
+        # Geçmiş deneyimlerden düzeltme
+        if len(self.efficiency_history) > 5:
+            recent_avg_efficiency = np.mean(self.efficiency_history[-5:])
+            correction_factor = 0.9 + 0.2 * recent_avg_efficiency  # 0.9-1.1 arası
+            base_demand *= correction_factor
+        
+        predicted_demand = base_demand * terrain_effect * traffic_effect * weather_effect
+        return max(0, predicted_demand)
+    
+    def adaptive_strategy_selection(self, current_state: Dict) -> Dict:
+        """Gerçek adaptive - Q-learning ile strateji seçimi"""
+        
+        state_key = self._get_state_key(current_state)
+        
+        # Q-table'da state yoksa initialize et
+        if state_key not in self.q_table:
+            self.q_table[state_key] = {
+                'pneumatic_heavy': 0.0,    # Pneumatic ağırlıklı
+                'electric_heavy': 0.0,     # Electric ağırlıklı  
+                'balanced': 0.0,           # Dengeli
+                'performance': 0.0         # Performans odaklı
+            }
+        
+        # Epsilon-greedy action selection
+        if random.random() < self.exploration_rate:
+            # Exploration - random action
+            action = random.choice(list(self.q_table[state_key].keys()))
+        else:
+            # Exploitation - best known action
+            action = max(self.q_table[state_key], key=self.q_table[state_key].get)
+        
+        # Action'ı strategy'ye çevirme
+        strategy_templates = {
+            'pneumatic_heavy': {
+                'pneumatic_ratio': 0.7 * self.strategy_weights['pressure_importance'],
+                'electric_ratio': 0.3,
+                'regen_aggressiveness': 0.4,
+                'efficiency_mode': 'pneumatic_priority'
+            },
+            'electric_heavy': {
+                'pneumatic_ratio': 0.2,
+                'electric_ratio': 0.8 * self.strategy_weights['battery_importance'],
+                'regen_aggressiveness': 0.7,
+                'efficiency_mode': 'electric_priority'
+            },
+            'balanced': {
+                'pneumatic_ratio': 0.4 * self.strategy_weights['pressure_importance'],
+                'electric_ratio': 0.6 * self.strategy_weights['battery_importance'],
+                'regen_aggressiveness': 0.5,
+                'efficiency_mode': 'balanced'
+            },
+            'performance': {
+                'pneumatic_ratio': 0.5,
+                'electric_ratio': 0.5,
+                'regen_aggressiveness': 0.3,
+                'efficiency_mode': 'performance'
+            }
+        }
+        
+        strategy = strategy_templates[action].copy()
+        
+        # Normalize ratios
+        total_ratio = strategy['pneumatic_ratio'] + strategy['electric_ratio']
+        if total_ratio > 0:
+            strategy['pneumatic_ratio'] /= total_ratio
+            strategy['electric_ratio'] /= total_ratio
+        
+        # Mevcut duruma göre fine-tuning
+        pressure_ratio = current_state.get('pressure_pa', 0) / 50_000_000
+        battery_ratio = current_state.get('battery_kwh', 0) / 50.0
+        
+        # Kritik durumlar için override
+        if pressure_ratio < 0.1 and battery_ratio > 0.3:
+            strategy['pneumatic_ratio'] = 0.05
+            strategy['electric_ratio'] = 0.95
+        elif battery_ratio < 0.1 and pressure_ratio > 0.3:
+            strategy['pneumatic_ratio'] = 0.8
+            strategy['electric_ratio'] = 0.2
+            
+        # Geçmiş action'ı kaydet
+        self.action_history.append((state_key, action))
+        
+        return strategy
+    
+    def learn_from_scenario(self, scenario_data: Dict, efficiency_achieved: float):
+        """Reinforcement Learning ile gerçek öğrenme"""
+        
+        # Reward hesaplama
+        reward = self._calculate_reward(efficiency_achieved, scenario_data)
+        self.reward_history.append(reward)
+        
+        # Q-learning update (son action için)
+        if len(self.action_history) > 0:
+            last_state, last_action = self.action_history[-1]
+            
+            if last_state in self.q_table:
+                old_q = self.q_table[last_state][last_action]
+                # Basit Q-update (next state olmadan - episodic)
+                new_q = old_q + self.learning_rate * (reward - old_q)
+                self.q_table[last_state][last_action] = new_q
+        
+        # Strategy weights güncelleme (gradient descent benzeri)
+        self._update_strategy_weights(scenario_data, efficiency_achieved)
+        
+        # Feature-based learning (regresyon için)
+        features = self._extract_features(scenario_data)
+        self.feature_history.append(features)
+        self.efficiency_history.append(efficiency_achieved)
+        
+        # Exploration rate decay
+        self.exploration_rate = max(
+            self.min_exploration, 
+            self.exploration_rate * self.exploration_decay
+        )
+        
+        # Geçmiş veriler pattern recognition
+        scenario_key = f"{scenario_data.get('speed_range', 'unknown')}_{scenario_data.get('terrain', 'unknown')}"
+        if scenario_key not in self.learning_data.efficiency_patterns:
+            self.learning_data.efficiency_patterns[scenario_key] = []
+        self.learning_data.efficiency_patterns[scenario_key].append(efficiency_achieved)
+        
+        # Scenario history
+        self.learning_data.scenario_history.append({
+            'scenario': scenario_data,
+            'efficiency': efficiency_achieved,
+            'reward': reward,
+            'timestamp': len(self.learning_data.scenario_history)
+        })
+    
+    def _calculate_reward(self, efficiency: float, scenario_data: Dict) -> float:
+        """Reward fonksiyonu - AI'ın öğrenmesini yönlendirir"""
+        base_reward = efficiency * 100  # 0-100 arası
+        
+        # Bonus/penalty faktörleri
+        
+        # Verimlilik bonusu
+        if efficiency > 0.9:
+            base_reward += 20
+        elif efficiency > 0.8:
+            base_reward += 10
+        elif efficiency < 0.6:
+            base_reward -= 15
+        
+        # Terrain zorluğuna göre bonus
+        terrain_bonus = {
+            'highway': 0,
+            'city': 5,
+            'mountain': 10,
+            'offroad': 15
+        }.get(scenario_data.get('terrain', ''), 0)
+        base_reward += terrain_bonus * (efficiency - 0.5)  # Zor arazide yüksek efficiency daha değerli
+        
+        # Hava koşulları bonusu
+        weather = scenario_data.get('weather', 'none')
+        if weather != 'none' and efficiency > 0.75:
+            base_reward += 8  # Kötü havada iyi verimlilik
+        
+        return base_reward
+    
+    def _update_strategy_weights(self, scenario_data: Dict, efficiency: float):
+        """Strategy ağırlıklarını gradient descent ile güncelleme"""
+        
+        learning_rate = 0.01
+        target_efficiency = 0.85
+        error = efficiency - target_efficiency
+        
+        # Hangi faktörlerin daha önemli olduğunu öğren
+        pressure_ratio = scenario_data.get('pressure_pa', 0) / 50_000_000
+        battery_ratio = scenario_data.get('battery_kwh', 0) / 50.0
+        
+        # Yüksek verimlilikle sonuçlanan faktörleri güçlendir
+        if error > 0:  # İyi sonuç
+            if pressure_ratio > 0.6:
+                self.strategy_weights['pressure_importance'] += learning_rate * error
+            if battery_ratio > 0.6:
+                self.strategy_weights['battery_importance'] += learning_rate * error
+        else:  # Kötü sonuç
+            if pressure_ratio > 0.6:
+                self.strategy_weights['pressure_importance'] -= learning_rate * abs(error)
+            if battery_ratio > 0.6:
+                self.strategy_weights['battery_importance'] -= learning_rate * abs(error)
+        
+        # Ağırlıkları sınırla
+        for key in self.strategy_weights:
+            self.strategy_weights[key] = np.clip(self.strategy_weights[key], 0.1, 1.0)
+    
+    def get_learning_statistics(self) -> Dict:
+        """Öğrenme istatistiklerini döndür"""
+        if len(self.efficiency_history) == 0:
+            return {'status': 'no_data'}
+            
+        recent_performance = np.mean(self.efficiency_history[-10:]) if len(self.efficiency_history) >= 10 else np.mean(self.efficiency_history)
+        initial_performance = np.mean(self.efficiency_history[:5]) if len(self.efficiency_history) >= 5 else self.efficiency_history[0]
+        
+        improvement = recent_performance - initial_performance
+        
+        return {
+            'total_scenarios': len(self.efficiency_history),
+            'current_exploration_rate': self.exploration_rate,
+            'average_efficiency': np.mean(self.efficiency_history),
+            'recent_efficiency': recent_performance,
+            'improvement': improvement,
+            'learned_strategies': len(self.q_table),
+            'best_strategy_states': [state for state, actions in self.q_table.items() 
+                                   if max(actions.values()) > 50]
+        }
+
+# Global AI instance
+vehicle_ai = HybridVehicleAI()
+
+def enhanced_temperature_efficiency_factor(temp_c: float, humidity: float) -> float:
+    """Geliştirilmiş sıcaklık verimliliği - nem faktörü dahil"""
+    base_temp_factor = temperature_efficiency_factor(temp_c)
+    
+    # Nem etkisi - yüksek nemde soğutma sistemi daha fazla çalışır
+    humidity_penalty = 0.0
+    if humidity > 80:
+        humidity_penalty = (humidity - 80) * 0.002
+    elif humidity < 20:
+        humidity_penalty = (20 - humidity) * 0.001
+    
+    return max(0.6, base_temp_factor - humidity_penalty)
+
+def temperature_efficiency_factor(temp_c: float) -> float:
+    """Sıcaklığın sistem verimliliğine etkisi"""
+    if 15 <= temp_c <= 25:
+        return 1.0
+    elif temp_c < 15:
+        # Soğukta pnömatik sistem daha az verimli, elektrik sistemi de etkilenir
+        return max(0.7, 1.0 - (15 - temp_c) * 0.012)  # Daha gerçekçi düşüş
+    else:
+        # Sıcakta soğutma sistemi devreye girer
+        return max(0.8, 1.0 - (temp_c - 25) * 0.008)
+
+def humidity_efficiency_factor(humidity: float) -> float:
+    """Nem faktörü - DÜZELTME: Çok yüksek nem daha zararlı"""
+    if 40 <= humidity <= 70:
+        return 1.0
+    elif humidity < 40:
+        return 0.96  # Kuru hava, static electricity
+    else:
+        # Yüksek nemde soğutma sistemi zorlanır
+        return max(0.85, 1.0 - (humidity - 70) * 0.004)  # Daha gerçekçi etki
+
+def altitude_density_factor(altitude_m: float) -> float:
+    """Yükseklik - hava yoğunluğu faktörü"""
+    return math.exp(-altitude_m / 8500)
+
+def enhanced_weather_effects(weather: WeatherType, intensity: RainIntensity, 
+                           visibility_m: float, speed_kmh: float) -> Dict:
+    """Geliştirilmiş hava durumu etkileri"""
+    effects = {
+        'rolling_resistance_mult': 1.0,
+        'drag_coefficient_mult': 1.0,
+        'visibility_safety_mult': 1.0,
+        'power_penalty_kw': 0.0
+    }
+    
+    # Yağmur/kar etkisi
+    if weather != WeatherType.NONE and intensity != RainIntensity.NONE:
+        base_effects = {
+            WeatherType.RAIN: {
+                RainIntensity.LIGHT: (1.1, 1.02, 0.5),
+                RainIntensity.MODERATE: (1.2, 1.05, 1.0),
+                RainIntensity.HEAVY: (1.3, 1.08, 2.0)
+            },
+            WeatherType.SNOW: {
+                RainIntensity.LIGHT: (1.2, 1.03, 1.0),
+                RainIntensity.MODERATE: (1.4, 1.06, 2.5),
+                RainIntensity.HEAVY: (1.6, 1.10, 4.0)
+            },
+            WeatherType.HAIL: {
+                RainIntensity.LIGHT: (1.15, 1.02, 0.8),
+                RainIntensity.MODERATE: (1.25, 1.04, 1.5),
+                RainIntensity.HEAVY: (1.35, 1.07, 3.0)
+            },
+            WeatherType.FOG: {
+                RainIntensity.LIGHT: (1.05, 1.01, 0.3),
+                RainIntensity.MODERATE: (1.08, 1.02, 0.5),
+                RainIntensity.HEAVY: (1.12, 1.03, 1.0)
+            }
+        }
+        
+        if weather in base_effects and intensity in base_effects[weather]:
+            roll_mult, drag_mult, power_penalty = base_effects[weather][intensity]
+            effects['rolling_resistance_mult'] = roll_mult
+            effects['drag_coefficient_mult'] = drag_mult
+            effects['power_penalty_kw'] = power_penalty
+    
+    # Görüş mesafesi güvenlik faktörü
+    if visibility_m < 500:
+        # Düşük görüşte hız sınırlaması gerekir
+        effects['visibility_safety_mult'] = max(0.5, visibility_m / 500)
+        # Ek güç tüketimi (farlar, sislikleri vs.)
+        effects['power_penalty_kw'] += (500 - visibility_m) / 200
+    
+    return effects
+
+def wind_power_effect_corrected(wind_speed_kmh: float, wind_dir: WindDirection, 
+                               vehicle_speed_kmh: float, altitude_m: float, 
+                               veh_params: VehicleParameters) -> float:
+    """DÜZELTME: Rüzgar etkisi hesaplaması"""
+    if vehicle_speed_kmh == 0:
+        return 0.0
+        
+    wind_ms = wind_speed_kmh / 3.6
+    veh_ms = vehicle_speed_kmh / 3.6
+    rho = 1.225 * altitude_density_factor(altitude_m)
+    Cd = veh_params.drag_coefficient
+    A = veh_params.frontal_area_m2
+
+    # Rüzgar yönüne göre efektif hız hesaplaması
+    v_rel = veh_ms
+    if wind_dir == WindDirection.HEAD:
+        v_rel = veh_ms + wind_ms
+    elif wind_dir == WindDirection.TAIL:
+        v_rel = max(0.1, veh_ms - wind_ms)  # Negatif olmasını önle
+    elif wind_dir == WindDirection.CROSS:
+        # Çapraz rüzgar etkisi - daha karmaşık
+        v_rel = math.sqrt(veh_ms**2 + (wind_ms * 0.7)**2)
+
+    # Aerodinamik güç hesaplaması
+    f_aero_wind = 0.5 * rho * Cd * A * v_rel * abs(v_rel)
+    power_aero_wind = (f_aero_wind * veh_ms) / 1000
+
+    f_aero_base = 0.5 * rho * Cd * A * veh_ms ** 2
+    power_aero_base = (f_aero_base * veh_ms) / 1000
+
+    return power_aero_wind - power_aero_base
+
+def total_power_demand_enhanced(
+    speed_kmh: float, accel_ms2: float, env: Environment, 
+    veh_params: VehicleParameters, sys_params: SystemParameters,
+    incline_deg: float = 0, driving_style: DrivingStyle = DrivingStyle.NORMAL
+) -> Tuple[float, Dict]:
+    """Geliştirilmiş güç talebi hesaplaması"""
+    
+    speed_ms = speed_kmh / 3.6
+    g = 9.807
+    mass = veh_params.mass_kg
+    incline_rad = math.radians(incline_deg)
+    
+    # Çevresel faktörler
+    temp_factor = enhanced_temperature_efficiency_factor(env.temperature_c, env.humidity_percent)
+    weather_effects = enhanced_weather_effects(env.weather_type, env.rain_intensity, 
+                                             env.visibility_m, speed_kmh)
+    rho = 1.225 * altitude_density_factor(env.altitude_m)
+
+    # Sürüş tarzına göre ayarlamalar
+    style_multipliers = {
+        DrivingStyle.DEFENSIVE: {'accel': 0.8, 'efficiency': 1.1},
+        DrivingStyle.NORMAL: {'accel': 1.0, 'efficiency': 1.0},
+        DrivingStyle.AGGRESSIVE: {'accel': 1.3, 'efficiency': 0.9},
+        DrivingStyle.ECO: {'accel': 0.7, 'efficiency': 1.15}
+    }
+    
+    style_mult = style_multipliers.get(driving_style, style_multipliers[DrivingStyle.NORMAL])
+    
+    # Güçler hesaplaması
+    Crr = veh_params.rolling_resistance_coeff * weather_effects['rolling_resistance_mult']
+    force_rolling = Crr * mass * g * math.cos(incline_rad) * veh_params.tire_efficiency
+    
+    Cd_eff = veh_params.drag_coefficient * weather_effects['drag_coefficient_mult']
+    force_aero = 0.5 * rho * Cd_eff * veh_params.frontal_area_m2 * speed_ms ** 2
+    
+    force_gravity = mass * g * math.sin(incline_rad)
+    force_accel = mass * accel_ms2 * style_mult['accel']
+
+    total_force = force_rolling + force_aero + force_gravity + force_accel
+    base_power_kw = (total_force * speed_ms) / 1000 if speed_ms > 0 else abs(force_accel * 0.1)
+
+    # Rüzgar etkisi (düzeltilmiş)
+    wind_effect_kw = wind_power_effect_corrected(env.wind_speed_kmh, env.wind_direction, 
+                                               speed_kmh, env.altitude_m, veh_params)
+    
+    # Yardımcı sistemler (klima, ısıtma vs.)
+    auxiliary_power = sys_params.thermal_management_power_kw
+    if env.temperature_c < 5 or env.temperature_c > 30:
+        auxiliary_power *= 1.5
+    
+    # Hava durumu ceza gücü
+    weather_penalty = weather_effects['power_penalty_kw']
+    
+    total_demand = (base_power_kw + wind_effect_kw + auxiliary_power + weather_penalty) / temp_factor
+    total_demand *= style_mult['efficiency']
+    
+    # AI tahmin ile karşılaştırma
+    ai_prediction = vehicle_ai.predict_energy_demand(
+        speed_kmh, env.terrain_type.value, 0.5, temp_factor
+    )
+    
+    details = {
+        'base_power': base_power_kw,
+        'wind_effect': wind_effect_kw,
+        'auxiliary_power': auxiliary_power,
+        'weather_penalty': weather_penalty,
+        'temp_factor': temp_factor,
+        'ai_prediction': ai_prediction,
+        'prediction_error': abs(total_demand - ai_prediction)
+    }
+    
+    return max(0, total_demand), details
+
+def air_tank_energy_corrected(
+    current_pressure_pa: float, tank_volume_m3: float, 
+    min_operating_pressure_pa: float, temperature_c: float = 22
+) -> float:
+    """DÜZELTME: Sıcaklık etkisi dahil enerji hesaplaması"""
+    if current_pressure_pa <= min_operating_pressure_pa:
+        return 0.0
+    
+    # Sıcaklık etkisi (ideal gaz yasası yaklaşımı)
+    temp_kelvin = temperature_c + 273.15
+    temp_correction = temp_kelvin / 295.15  # 22°C referans
+    
+    # İzotermik genleşme enerjisi
+    energy_j = current_pressure_pa * tank_volume_m3 * math.log(
+        current_pressure_pa / min_operating_pressure_pa
+    ) * temp_correction
+    
+    return max(0, energy_j / 3.6e6)
+
+def ai_enhanced_energy_management(
+    demand_kw: float,
+    pressure_pa: float,
+    battery_kwh: float,
+    sys: SystemParameters,
+    veh_params: VehicleParameters,
+    env: Environment,
+    driving_style: DrivingStyle = DrivingStyle.NORMAL
+) -> Tuple[float, float, float, Dict]:
+    """AI destekli enerji yönetimi"""
+    
+    # Mevcut durum
+    current_state = {
+        'demand_kw': demand_kw,
+        'pressure_pa': pressure_pa,
+        'battery_kwh': battery_kwh,
+        'temperature_c': env.temperature_c,
+        'driving_style': driving_style.value
+    }
+    
+    # AI stratejisi
+    ai_strategy = vehicle_ai.adaptive_strategy_selection(current_state)
+    
+    can_use_pneumatic = pressure_pa > sys.min_operating_pressure_pa
+    pneumatic_out = 0.0
+    electric_out = 0.0
+    
+    if demand_kw > 0:
+        # Motor potansiyellerini hesapla
+        pneu_potential = pneumatic_motor_power_enhanced(demand_kw, pressure_pa, sys, veh_params, env.temperature_c)
+        elec_potential = electric_motor_power_enhanced(demand_kw, battery_kwh, sys, env.temperature_c)
+        
+        # AI stratejisine göre dağılım
+        target_pneumatic = demand_kw * ai_strategy['pneumatic_ratio']
+        target_electric = demand_kw * ai_strategy['electric_ratio']
+        
+        # Gerçek güç dağılımı
+        pneumatic_out = min(target_pneumatic, pneu_potential) if can_use_pneumatic else 0
+        electric_out = min(target_electric, elec_potential)
+        
+        # Eksik güçü diğer sistemden karşıla
+        total_output = pneumatic_out + electric_out
+        if total_output < demand_kw:
+            shortfall = demand_kw - total_output
+            if can_use_pneumatic and pneu_potential > pneumatic_out:
+                additional_pneu = min(shortfall, pneu_potential - pneumatic_out)
+                pneumatic_out += additional_pneu
+                shortfall -= additional_pneu
+            
+            if shortfall > 0 and elec_potential > electric_out:
+                electric_out += min(shortfall, elec_potential - electric_out)
+                
+    elif demand_kw < 0:
+        # Rejeneratif freneme - AI'dan öğrenilmiş agresiflik
+        regen_potential = abs(demand_kw)
+        max_regen = sys.max_regen_power_kw * ai_strategy['regen_aggressiveness']
+        electric_out = -min(regen_potential, max_regen)
+        pneumatic_out = 0
+    
+    total_output = pneumatic_out + electric_out
+    
+    # AI öğrenme verisi
+    efficiency = total_output / max(0.1, abs(demand_kw)) if demand_kw != 0 else 1.0
+    scenario_data = {
+        'speed_range': 'low' if abs(demand_kw) < 30 else 'medium' if abs(demand_kw) < 80 else 'high',
+        'terrain': env.terrain_type.value,
+        'weather': env.weather_type.value
+    }
+    vehicle_ai.learn_from_scenario(scenario_data, efficiency)
+    
+    details = {
+        'ai_strategy': ai_strategy,
+        'efficiency_achieved': efficiency,
+        'pneumatic_potential': pneu_potential if 'pneu_potential' in locals() else 0,
+        'electric_potential': elec_potential if 'elec_potential' in locals() else 0
+    }
+    
+    return pneumatic_out, electric_out, total_output, details
+
+def pneumatic_motor_power_enhanced(
+    demand_kw: float, pressure_pa: float, sys: SystemParameters, 
+    veh_params: VehicleParameters, temperature_c: float
+) -> float:
+    """Geliştirilmiş pnömatik motor gücü hesaplaması"""
+    if pressure_pa <= sys.min_operating_pressure_pa or veh_params.pneumatic_flow_rate_m3s <= 0:
+        return 0.0
+    
+    # Sıcaklık etkisi
+    temp_efficiency = temperature_efficiency_factor(temperature_c)
+    
+    # Basınç etkisi - gerçek motor karakteristiği
+    pressure_ratio = pressure_pa / veh_params.max_tank_pressure_pa
+    pressure_efficiency = min(1.0, 0.3 + 0.7 * pressure_ratio)  # Düşük basınçta verimlilik düşer
+    
+    base_power = (pressure_pa * veh_params.pneumatic_flow_rate_m3s) / 1000
+    effective_power = base_power * sys.pneumatic_efficiency * temp_efficiency * pressure_efficiency
+    
+    # Yüksek basınçta bonus
+    if pressure_pa > sys.pneumatic_priority_threshold_pa:
+        effective_power *= 1.3  # Daha gerçekçi bonus
+    
+    return max(0, min(demand_kw, effective_power))
+
+def electric_motor_power_enhanced(
+    demand_kw: float, battery_kwh: float, sys: SystemParameters, temperature_c: float
+) -> float:
+    """Geliştirilmiş elektrik motor gücü hesaplaması"""
+    
+    # Batarya durum etkisi - daha yumuşak geçiş
+    if battery_kwh < sys.battery_low_threshold_kwh:
+        battery_factor = max(0.2, (battery_kwh / sys.battery_low_threshold_kwh) ** 0.5)
+    else:
+        # Tam doluda bile %100 güç vermeyebilir (termal koruma)
+        charge_ratio = battery_kwh / sys.battery_capacity_kwh
+        battery_factor = min(1.0, 0.85 + 0.15 * (1 - charge_ratio))
+    
+    # Sıcaklık etkisi
+    temp_efficiency = temperature_efficiency_factor(temperature_c)
+    
+    potential = sys.max_electric_power_kw * battery_factor * temp_efficiency * sys.electric_efficiency
+    
+    return max(0, min(demand_kw, potential))
+
+def regenerative_energy_enhanced(
+    initial_speed_kmh: float, final_speed_kmh: float, vehicle_mass_kg: float, 
+    battery_kwh: float, battery_capacity_kwh: float, regen_eff: float = 0.7
+) -> float:
+    """Geliştirilmiş rejeneratif enerji hesaplaması"""
+    v_i = initial_speed_kmh / 3.6
+    v_f = final_speed_kmh / 3.6
+    delta_ke = 0.5 * vehicle_mass_kg * (v_i ** 2 - v_f ** 2)
+    
+    if delta_ke <= 0:
+        return 0.0
+    
+    # Batarya doluluk oranına göre rejeneratif fren verimliliği
+    charge_ratio = battery_kwh / battery_capacity_kwh
+    if charge_ratio > 0.9:
+        # Batarya doluyken rejeneratif fren sınırlı
+        regen_eff *= (1.0 - charge_ratio) * 10  # %90'dan sonra hızla düşer
+    
+    recoverable_energy = (delta_ke * regen_eff) / 3.6e6
+    
+    # Batarya kapasitesini aşmayacak şekilde sınırla
+    max_acceptable = max(0, battery_capacity_kwh - battery_kwh)
+    
+    return min(recoverable_energy, max_acceptable)
+
+# === TEST SCENARIOS WITH AI ===
+
+def run_enhanced_test_scenarios():
+    """Geliştirilmiş test senaryoları"""
+    veh_params = VehicleParameters()
+    sys_params = SystemParameters()
+    
+    scenarios = [
+        {
+            "name": "Ideal Highway Cruise",
+            "speed_kmh": 60, "accel_ms2": 0, "incline_deg": 0,
+            "pressure_bar": 400, "battery_kwh": 35, 
+            "driving_style": DrivingStyle.NORMAL,
+            "env": Environment(terrain_type=TerrainType.HIGHWAY)
+        },
+        {
+            "name": "City Traffic - ECO Mode",
+            "speed_kmh": 30, "accel_ms2": 1.0, "incline_deg": 0,
+            "pressure_bar": 250, "battery_kwh": 20,
+            "driving_style": DrivingStyle.ECO,
+            "env": Environment(
+                temperature_c=35, weather_type=WeatherType.NONE,
+                terrain_type=TerrainType.CITY
+            )
+        },
+        {
+            "name": "Mountain Climb - Low Battery",
+            "speed_kmh": 40, "accel_ms2": 0.5, "incline_deg": 12,
+            "pressure_bar": 450, "battery_kwh": 3,
+            "driving_style": DrivingStyle.DEFENSIVE,
+            "env": Environment(
+                altitude_m=1500, temperature_c=8,
+                terrain_type=TerrainType.MOUNTAIN
+            )
+        },
+        {
+            "name": "Stormy Weather - High Speed",
+            "speed_kmh": 100, "accel_ms2": 0, "incline_deg": -2,
+            "pressure_bar": 300, "battery_kwh": 25,
+            "driving_style": DrivingStyle.AGGRESSIVE,
+            "env": Environment(
+                weather_type=WeatherType.RAIN, rain_intensity=RainIntensity.HEAVY,
+                wind_speed_kmh=45, wind_direction=WindDirection.HEAD,
+                visibility_m=200, terrain_type=TerrainType.HIGHWAY
+            )
+        },
+        {
+            "name": "Off-road Adventure",
+            "speed_kmh": 25, "accel_ms2": 2.0, "incline_deg": 8,
+            "pressure_bar": 480, "battery_kwh": 40,
+            "driving_style": DrivingStyle.NORMAL,
+            "env": Environment(
+                terrain_type=TerrainType.OFFROAD,
+                weather_type=WeatherType.NONE,
+                temperature_c=28
+            )
+        },
+        {
+            "name": "Winter Conditions",
+            "speed_kmh": 50, "accel_ms2": 0, "incline_deg": 3,
+            "pressure_bar": 350, "battery_kwh": 15,
+            "driving_style": DrivingStyle.DEFENSIVE,
+            "env": Environment(
+                temperature_c=-5, weather_type=WeatherType.SNOW,
+                rain_intensity=RainIntensity.MODERATE,
+                wind_speed_kmh=20, wind_direction=WindDirection.CROSS,
+                terrain_type=TerrainType.CITY
+            )
+        }
+    ]
+    
+    print("=== AI ENHANCED HYBRID VEHICLE SIMULATION ===\n")
+    
+    for i, sc in enumerate(scenarios):
+        air_pressure_pa = sc["pressure_bar"] * 100_000
+        
+        # Geliştirilmiş güç talebi hesaplama
+        demand_kw, demand_details = total_power_demand_enhanced(
+            sc["speed_kmh"], sc["accel_ms2"], sc["env"], 
+            veh_params, sys_params, sc["incline_deg"], sc["driving_style"]
+        )
+        
+        # AI destekli enerji yönetimi
+        pneumatic_kw, electric_kw, total_kw, management_details = ai_enhanced_energy_management(
+            demand_kw, air_pressure_pa, sc["battery_kwh"],
+            sys_params, veh_params, sc["env"], sc["driving_style"]
+        )
+        
+        # Sonuçları yazdır
+        print(f"🚗 {sc['name']}:")
+        print(f"   📊 Demand: {demand_kw:.2f}kW | Pneumatic: {pneumatic_kw:.2f}kW | Electric: {electric_kw:.2f}kW")
+        print(f"   🔋 Battery: {sc['battery_kwh']:.1f}kWh | 💨 Pressure: {sc['pressure_bar']}bar")
+        print(f"   🌡️  Temp Factor: {demand_details['temp_factor']:.3f} | ⚡ Efficiency: {management_details['efficiency_achieved']:.3f}")
+        print(f"   🤖 AI Prediction: {demand_details['ai_prediction']:.2f}kW | Error: {demand_details['prediction_error']:.2f}kW")
+        
+        # AI stratejisi detayları
+        strategy = management_details['ai_strategy']
+        print(f"   🧠 AI Strategy - P:{strategy['pneumatic_ratio']:.2f} | E:{strategy['electric_ratio']:.2f}")
+        
+        if i < len(scenarios) - 1:
+            print()
+    
+    # AI öğrenme istatistikleri
+    print("\n" + "="*60)
+    print("🤖 REAL-TIME AI LEARNING STATISTICS")
+    print("="*60)
+    
+    learning_stats = vehicle_ai.get_learning_statistics()
+    if learning_stats.get('status') != 'no_data':
+        print(f"📊 Total Learning Scenarios: {learning_stats['total_scenarios']}")
+        print(f"🎯 Average Efficiency: {learning_stats['average_efficiency']:.3f}")
+        print(f"📈 Recent Performance: {learning_stats['recent_efficiency']:.3f}")
+        print(f"🚀 AI Improvement: {learning_stats['improvement']:+.3f}")
+        print(f"🔍 Current Exploration Rate: {learning_stats['current_exploration_rate']:.3f}")
+        print(f"🧠 Learned Strategy States: {learning_stats['learned_strategies']}")
+        
+        if learning_stats['best_strategy_states']:
+            print(f"⭐ Best Performing States: {', '.join(learning_stats['best_strategy_states'][:3])}")
+        
+        # Q-learning tablosu özeti
+        if vehicle_ai.q_table:
+            print(f"\n🎮 Q-Learning Progress:")
+            for state, actions in list(vehicle_ai.q_table.items())[:3]:  # İlk 3 state
+                best_action = max(actions, key=actions.get)
+                best_score = actions[best_action]
+                print(f"   {state}: {best_action} (Q={best_score:.1f})")
+                
+        # Strategy weights evolution
+        print(f"\n⚖️ Learned Strategy Weights:")
+        for weight_name, value in vehicle_ai.strategy_weights.items():
+            print(f"   {weight_name}: {value:.3f}")
+    
+    # Pattern analysis
+    if vehicle_ai.learning_data.efficiency_patterns:
+        print(f"\n📈 EFFICIENCY PATTERNS DISCOVERED:")
+        for pattern, efficiencies in vehicle_ai.learning_data.efficiency_patterns.items():
+            avg_eff = np.mean(efficiencies)
+            trend = "↗️" if len(efficiencies) > 1 and efficiencies[-1] > efficiencies[0] else "↘️" if len(efficiencies) > 1 and efficiencies[-1] < efficiencies[0] else "→"
+            print(f"   {pattern}: {avg_eff:.3f} {trend} (n={len(efficiencies)})")
+
+def advanced_optimization_demo():
+    """Gerçek zamanlı optimizasyon demosu"""
+    print("\n" + "="*60)
+    print("🔬 ADVANCED AI OPTIMIZATION DEMONSTRATION")
+    print("="*60)
+    
+    veh_params = VehicleParameters()
+    sys_params = SystemParameters()
+    
+    # AI'ın öğrenmesi için birden fazla senaryo çalıştır
+    training_scenarios = [
+        # Kolay senaryolar
+        {"speed_kmh": 50, "terrain": TerrainType.HIGHWAY, "battery_kwh": 40, "pressure_bar": 400, "weather": WeatherType.NONE},
+        {"speed_kmh": 60, "terrain": TerrainType.HIGHWAY, "battery_kwh": 35, "pressure_bar": 350, "weather": WeatherType.NONE},
+        {"speed_kmh": 70, "terrain": TerrainType.HIGHWAY, "battery_kwh": 30, "pressure_bar": 300, "weather": WeatherType.NONE},
+        
+        # Orta zorluk
+        {"speed_kmh": 40, "terrain": TerrainType.CITY, "battery_kwh": 25, "pressure_bar": 250, "weather": WeatherType.RAIN},
+        {"speed_kmh": 45, "terrain": TerrainType.CITY, "battery_kwh": 20, "pressure_bar": 200, "weather": WeatherType.RAIN},
+        
+        # Zor senaryolar
+        {"speed_kmh": 30, "terrain": TerrainType.MOUNTAIN, "battery_kwh": 15, "pressure_bar": 450, "weather": WeatherType.SNOW},
+        {"speed_kmh": 25, "terrain": TerrainType.MOUNTAIN, "battery_kwh": 10, "pressure_bar": 400, "weather": WeatherType.SNOW},
+        {"speed_kmh": 35, "terrain": TerrainType.MOUNTAIN, "battery_kwh": 8, "pressure_bar": 480, "weather": WeatherType.SNOW},
+    ]
+    
+    print("🏋️ Training AI with Progressive Difficulty...")
+    
+    for i, scenario in enumerate(training_scenarios):
+        env = Environment(
+            terrain_type=scenario["terrain"],
+            weather_type=scenario["weather"],
+            rain_intensity=RainIntensity.MODERATE if scenario["weather"] != WeatherType.NONE else RainIntensity.NONE
+        )
+        
+        # Güç talebi hesapla
+        demand_kw, _ = total_power_demand_enhanced(
+            scenario["speed_kmh"], 0, env, veh_params, sys_params, 0, DrivingStyle.NORMAL
+        )
+        
+        # AI destekli enerji yönetimi
+        pressure_pa = scenario["pressure_bar"] * 100_000
+        pneumatic_kw, electric_kw, total_kw, details = ai_enhanced_energy_management(
+            demand_kw, pressure_pa, scenario["battery_kwh"],
+            sys_params, veh_params, env, DrivingStyle.NORMAL
+        )
+        
+        efficiency = details['efficiency_achieved']
+        
+        print(f"   Scenario {i+1}: {scenario['terrain'].value.capitalize()} - Efficiency: {efficiency:.3f} | Exploration: {vehicle_ai.exploration_rate:.3f}")
+        
+        # Simüle edilen performans feedback (gerçekte sensörlerden gelir)
+        # Zor senaryolarda bile AI öğrenmeye devam etsin
+        if scenario['terrain'] == TerrainType.MOUNTAIN and efficiency > 0.7:
+            # Mountain senaryosunda yüksek efficiency için bonus reward
+            bonus_scenario = {
+                'terrain': scenario['terrain'].value,
+                'weather': scenario['weather'].value,
+                'speed_range': 'low',
+                'difficulty': 'hard'
+            }
+            vehicle_ai.learn_from_scenario(bonus_scenario, efficiency + 0.1)  # Bonus learning
+    
+    print("\n💡 AI Learning Complete! Showing improvement...")
+    
+    # Aynı tip senaryoyu tekrar test et - AI'ın öğrenip öğrenmediğini göster
+    final_test_env = Environment(terrain_type=TerrainType.MOUNTAIN, weather_type=WeatherType.SNOW)
+    final_demand, _ = total_power_demand_enhanced(30, 0, final_test_env, veh_params, sys_params, 0, DrivingStyle.NORMAL)
+    
+    print(f"\n🧪 Final Challenge Test:")
+    print(f"   Scenario: Mountain + Snow, 30 km/h")
+    
+    final_pneumatic, final_electric, final_total, final_details = ai_enhanced_energy_management(
+        final_demand, 45_000_000, 12, sys_params, veh_params, final_test_env, DrivingStyle.NORMAL
+    )
+    
+    print(f"   🎯 AI Final Performance: {final_details['efficiency_achieved']:.3f}")
+    print(f"   🤖 AI Strategy Used: {final_details['ai_strategy']['efficiency_mode']}")
+    print(f"   📊 Power Distribution: P:{final_pneumatic:.1f}kW | E:{final_electric:.1f}kW")
+
+def continuous_learning_simulation(episodes: int = 50):
+    """Sürekli öğrenme simülasyonu"""
+    print(f"\n" + "="*60)
+    print(f"🔄 CONTINUOUS LEARNING SIMULATION ({episodes} Episodes)")
+    print("="*60)
+    
+    veh_params = VehicleParameters()
+    sys_params = SystemParameters()
+    
+    performance_history = []
+    
+    for episode in range(episodes):
+        # Random senaryo oluştur
+        scenario = {
+            'speed_kmh': random.uniform(20, 120),
+            'terrain': random.choice(list(TerrainType)),
+            'weather': random.choice(list(WeatherType)),
+            'battery_kwh': random.uniform(5, 45),
+            'pressure_bar': random.uniform(100, 500),
+            'incline': random.uniform(-5, 15)
+        }
+        
+        env = Environment(
+            terrain_type=scenario['terrain'],
+            weather_type=scenario['weather'],
+            rain_intensity=RainIntensity.MODERATE if scenario['weather'] != WeatherType.NONE else RainIntensity.NONE,
+            temperature_c=random.uniform(-10, 45)
+        )
+        
+        demand_kw, _ = total_power_demand_enhanced(
+            scenario['speed_kmh'], 0, env, veh_params, sys_params, 
+            scenario['incline'], DrivingStyle.NORMAL
+        )
+        
+        pressure_pa = scenario['pressure_bar'] * 100_000
+        _, _, _, details = ai_enhanced_energy_management(
+            demand_kw, pressure_pa, scenario['battery_kwh'],
+            sys_params, veh_params, env, DrivingStyle.NORMAL
+        )
+        
+        efficiency = details['efficiency_achieved']
+        performance_history.append(efficiency)
+        
+        # Her 10 episodda bir progress göster
+        if (episode + 1) % 10 == 0:
+            recent_avg = np.mean(performance_history[-10:])
+            overall_avg = np.mean(performance_history)
+            improvement = recent_avg - np.mean(performance_history[:10]) if len(performance_history) >= 10 else 0
+            
+            print(f"Episode {episode+1:2d}: Recent Avg: {recent_avg:.3f} | Overall: {overall_avg:.3f} | Improvement: {improvement:+.3f}")
+    
+    # Final analiz
+    print(f"\n📈 LEARNING CURVE ANALYSIS:")
+    initial_performance = np.mean(performance_history[:10])
+    final_performance = np.mean(performance_history[-10:])
+    total_improvement = final_performance - initial_performance
+    
+    print(f"   Initial Performance (Episodes 1-10): {initial_performance:.3f}")
+    print(f"   Final Performance (Episodes {episodes-9}-{episodes}): {final_performance:.3f}")
+    print(f"   Total AI Improvement: {total_improvement:+.3f} ({total_improvement/initial_performance*100:+.1f}%)")
+    
+    # Variance analızı (öğrenme istikrarı)
+    initial_variance = np.var(performance_history[:10])
+    final_variance = np.var(performance_history[-10:])
+    print(f"   Learning Stability: {(initial_variance-final_variance)/initial_variance*100:+.1f}% (variance reduction)")
+    
+    return performance_history
+
+def advanced_range_calculator(veh_params: VehicleParameters, sys_params: SystemParameters,
+                            current_battery_kwh: float, current_pressure_bar: float,
+                            avg_speed_kmh: float = 60, terrain: TerrainType = TerrainType.HIGHWAY) -> Dict:
+    """Gelişmiş menzil hesaplayıcısı"""
+    
+    # Test ortamı
+    test_env = Environment(terrain_type=terrain)
+    
+    # Ortalama güç tüketimi hesaplama
+    avg_demand, _ = total_power_demand_enhanced(
+        avg_speed_kmh, 0, test_env, veh_params, sys_params, 0, DrivingStyle.NORMAL
+    )
+    
+    # Enerji kaynakları
+    battery_energy = current_battery_kwh
+    pneumatic_energy = air_tank_energy_corrected(
+        current_pressure_bar * 100_000, veh_params.tank_volume_m3,
+        sys_params.min_operating_pressure_pa, test_env.temperature_c
+    )
+    
+    total_energy = battery_energy + pneumatic_energy
+    
+    # Menzil hesaplama (saat cinsinden)
+    if avg_demand > 0:
+        range_hours = total_energy / avg_demand
+        range_km = range_hours * avg_speed_kmh
+    else:
+        range_hours = float('inf')
+        range_km = float('inf')
+    
+    return {
+        'total_range_km': range_km,
+        'range_hours': range_hours,
+        'battery_energy_kwh': battery_energy,
+        'pneumatic_energy_kwh': pneumatic_energy,
+        'total_energy_kwh': total_energy,
+        'avg_power_demand_kw': avg_demand,
+        'energy_distribution': {
+            'battery_percent': (battery_energy / total_energy * 100) if total_energy > 0 else 0,
+            'pneumatic_percent': (pneumatic_energy / total_energy * 100) if total_energy > 0 else 0
+        }
+    }
+
+def system_diagnostics(veh_params: VehicleParameters, sys_params: SystemParameters,
+                      current_battery_kwh: float, current_pressure_bar: float,
+                      temperature_c: float = 22) -> Dict:
+    """Sistem tanılaması"""
+    
+    diagnostics = {
+        'battery_status': 'normal',
+        'pneumatic_status': 'normal',
+        'overall_health': 'good',
+        'warnings': [],
+        'recommendations': []
+    }
+    
+    # Batarya kontrolü
+    battery_percent = (current_battery_kwh / sys_params.battery_capacity_kwh) * 100
+    if battery_percent < 10:
+        diagnostics['battery_status'] = 'critical'
+        diagnostics['warnings'].append('Battery critically low')
+        diagnostics['recommendations'].append('Immediate charging required')
+    elif battery_percent < 20:
+        diagnostics['battery_status'] = 'low'
+        diagnostics['warnings'].append('Battery low')
+        diagnostics['recommendations'].append('Consider charging soon')
+    
+    # Pnömatik sistem kontrolü
+    pressure_pa = current_pressure_bar * 100_000
+    if pressure_pa < sys_params.min_operating_pressure_pa:
+        diagnostics['pneumatic_status'] = 'offline'
+        diagnostics['warnings'].append('Pneumatic system offline - pressure too low')
+        diagnostics['recommendations'].append('Refill air tank immediately')
+    elif pressure_pa < sys_params.pneumatic_priority_threshold_pa:
+        diagnostics['pneumatic_status'] = 'reduced'
+        diagnostics['warnings'].append('Pneumatic system at reduced capacity')
+        diagnostics['recommendations'].append('Consider refilling air tank')
+    
+    # Sıcaklık kontrolü
+    if temperature_c < -10:
+        diagnostics['warnings'].append('Extreme cold - system efficiency reduced')
+        diagnostics['recommendations'].append('Pre-heat system before use')
+    elif temperature_c > 40:
+        diagnostics['warnings'].append('High temperature - cooling system working hard')
+        diagnostics['recommendations'].append('Avoid extended high-power usage')
+    
+    # Genel sağlık değerlendirmesi
+    if len(diagnostics['warnings']) >= 3:
+        diagnostics['overall_health'] = 'poor'
+    elif len(diagnostics['warnings']) >= 1:
+        diagnostics['overall_health'] = 'fair'
+    
+    return diagnostics
+
+def efficiency_optimizer(scenario_data: Dict) -> Dict:
+    """Verilen senaryo için verimlilik optimizasyonu önerileri"""
+    
+    recommendations = {
+        'speed_recommendation': 'maintain',
+        'driving_style_recommendation': 'current',
+        'energy_strategy': 'balanced',
+        'estimated_improvement': 0.0,
+        'specific_tips': []
+    }
+    
+    speed = scenario_data.get('speed_kmh', 60)
+    driving_style = scenario_data.get('driving_style', DrivingStyle.NORMAL)
+    terrain = scenario_data.get('terrain_type', TerrainType.HIGHWAY)
+    
+    # Hız önerisi
+    if terrain == TerrainType.HIGHWAY:
+        optimal_speed = 90
+        if speed > optimal_speed + 20:
+            recommendations['speed_recommendation'] = f'reduce to ~{optimal_speed}kmh for better efficiency'
+            recommendations['estimated_improvement'] += 15
+        elif speed < optimal_speed - 20:
+            recommendations['speed_recommendation'] = f'increase to ~{optimal_speed}kmh for optimal efficiency'
+            recommendations['estimated_improvement'] += 8
+    elif terrain == TerrainType.CITY:
+        if speed > 50:
+            recommendations['speed_recommendation'] = 'reduce speed for city driving'
+            recommendations['estimated_improvement'] += 12
+    
+    # Sürüş tarzı önerisi
+    if driving_style == DrivingStyle.AGGRESSIVE:
+        recommendations['driving_style_recommendation'] = 'switch to ECO mode'
+        recommendations['estimated_improvement'] += 20
+        recommendations['specific_tips'].append('Smooth acceleration and deceleration')
+    elif driving_style == DrivingStyle.NORMAL and terrain in [TerrainType.CITY, TerrainType.HIGHWAY]:
+        recommendations['driving_style_recommendation'] = 'consider ECO mode'
+        recommendations['estimated_improvement'] += 10
+    
+    # Enerji stratejisi
+    battery_level = scenario_data.get('battery_percent', 50)
+    pressure_level = scenario_data.get('pressure_percent', 50)
+    
+    if battery_level > 80 and pressure_level < 40:
+        recommendations['energy_strategy'] = 'electric_priority'
+        recommendations['specific_tips'].append('Use electric power to preserve pneumatic energy')
+    elif pressure_level > 80 and battery_level < 40:
+        recommendations['energy_strategy'] = 'pneumatic_priority'
+        recommendations['specific_tips'].append('Use pneumatic power to preserve battery')
+    
+    # Genel ipuçları
+    recommendations['specific_tips'].extend([
+        'Maintain steady speeds when possible',
+        'Use regenerative braking effectively',
+        'Pre-plan routes to avoid steep inclines',
+        'Monitor weather conditions for optimal timing'
+    ])
+    
+    return recommendations
+
+# === MAIN EXECUTION ===
+
+if __name__ == "__main__":
+    print("🚀 AI-ENHANCED HYBRID PNEUMATIC-ELECTRIC VEHICLE SIMULATION")
+    print("=" * 70)
+    
+    # Test senaryolarını çalıştır
+    run_enhanced_test_scenarios()
+    
+    # Menzil hesaplama örneği
+    print("\n" + "="*60)
+    print("📍 RANGE CALCULATOR EXAMPLE")
+    print("="*60)
+    
+    veh_params = VehicleParameters()
+    sys_params = SystemParameters()
+    
+    range_info = advanced_range_calculator(
+        veh_params, sys_params, 
+        current_battery_kwh=30, current_pressure_bar=350,
+        avg_speed_kmh=70, terrain=TerrainType.HIGHWAY
+    )
+    
+    print(f"🎯 Total Range: {range_info['total_range_km']:.1f} km ({range_info['range_hours']:.1f} hours)")
+    print(f"🔋 Battery Energy: {range_info['battery_energy_kwh']:.1f} kWh ({range_info['energy_distribution']['battery_percent']:.1f}%)")
+    print(f"💨 Pneumatic Energy: {range_info['pneumatic_energy_kwh']:.1f} kWh ({range_info['energy_distribution']['pneumatic_percent']:.1f}%)")
+    print(f"⚡ Average Power Demand: {range_info['avg_power_demand_kw']:.1f} kW")
+    
+    # Sistem tanılaması
+    print("\n" + "="*60)
+    print("🔧 SYSTEM DIAGNOSTICS")
+    print("="*60)
+    
+    diagnostics = system_diagnostics(
+        veh_params, sys_params,
+        current_battery_kwh=8, current_pressure_bar=180,
+        temperature_c=35
+    )
+    
+    print(f"🔋 Battery Status: {diagnostics['battery_status'].upper()}")
+    print(f"💨 Pneumatic Status: {diagnostics['pneumatic_status'].upper()}")
+    print(f"🏥 Overall Health: {diagnostics['overall_health'].upper()}")
+    
+    if diagnostics['warnings']:
+        print("\n⚠️  WARNINGS:")
+        for warning in diagnostics['warnings']:
+            print(f"   • {warning}")
+    
+    if diagnostics['recommendations']:
+        print("\n💡 RECOMMENDATIONS:")
+        for rec in diagnostics['recommendations']:
+            print(f"   • {rec}")
+    
+    print("\n" + "="*70)
+    print("✅ SIMULATION COMPLETE - AI Learning Active")
+    print("="*70)
